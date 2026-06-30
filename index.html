@@ -123,11 +123,12 @@ body {
 
 /* Card WhatsApp */
 .card-small {
-  background: var(--cream-card); border-radius: 16px; padding: 18px 22px; margin-bottom: 28px;
+  background: var(--cream-card); border-radius: 16px; padding: 18px 22px; margin-bottom: 16px;
   display: flex; align-items: center; justify-content: space-between; text-decoration: none;
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
   transition: transform 0.1s, box-shadow 0.2s;
 }
+.card-small:last-of-type { margin-bottom: 28px; }
 .card-small:active { transform: scale(0.99); }
 @media (hover: hover) { .card-small:hover { box-shadow: 0 14px 36px rgba(0,0,0,0.4); } }
 .card-small-left { display: flex; align-items: center; gap: 14px; }
@@ -138,6 +139,13 @@ body {
   display: flex; align-items: center; justify-content: center;
 }
 .wa-circle svg { width: 22px; height: 22px; fill: var(--cream); }
+.quiz-circle {
+  flex-shrink: 0;
+  width: 42px; height: 42px; border-radius: 50%;
+  background: #1B1713;
+  display: flex; align-items: center; justify-content: center;
+}
+.quiz-circle svg { width: 19px; height: 19px; fill: var(--caramel); }
 .card-small-title { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
 .card-small-desc { font-size: 12.5px; color: var(--body); line-height: 1.4; }
 .card-small .arrow { color: var(--terracotta); font-size: 20px; flex-shrink: 0; margin-left: 16px; }
@@ -187,7 +195,21 @@ body {
     </div>
   </div>
 
-  <!-- 2. WhatsApp -->
+  <!-- 2. Checklist / Quiz (mesmo site, página /checklist) -->
+  <a href="/checklist" class="card-small">
+    <div class="card-small-left">
+      <div class="quiz-circle">
+        <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M152.1 38.2c9.9 8.9 10.7 24 1.8 33.9l-72 80c-4.4 4.9-10.6 7.8-17.2 7.9s-12.9-2.4-17.6-7L7 113C-2.3 103.6-2.3 88.4 7 79s24.6-9.4 33.9 0l22.1 22.1 55.1-61.2c8.9-9.9 24-10.7 33.9-1.8zm0 160c9.9 8.9 10.7 24 1.8 33.9l-72 80c-4.4 4.9-10.6 7.8-17.2 7.9s-12.9-2.4-17.6-7L7 273c-9.3-9.4-9.3-24.6 0-33.9s24.6-9.4 33.9 0l22.1 22.1 55.1-61.2c8.9-9.9 24-10.7 33.9-1.8zM224 96c0-17.7 14.3-32 32-32H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H256c-17.7 0-32-14.3-32-32zm0 160c0-17.7 14.3-32 32-32H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H256c-17.7 0-32-14.3-32-32zM160 416c0-17.7 14.3-32 32-32H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H192c-17.7 0-32-14.3-32-32zM48 368a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"/></svg>
+      </div>
+      <div>
+        <div class="card-small-title">Raio-X da sua vida financeira</div>
+        <div class="card-small-desc">13 perguntas pra você saber onde está.</div>
+      </div>
+    </div>
+    <span class="arrow">→</span>
+  </a>
+
+  <!-- 3. WhatsApp -->
   <a href="https://wa.me/5511981940543" class="card-small" rel="noopener noreferrer">
     <div class="card-small-left">
       <div class="wa-circle">

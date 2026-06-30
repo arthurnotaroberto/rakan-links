@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checklist Financeiro — Arthur Notaroberto</title>
+<meta name="description" content="Descubra em qual das 5 etapas financeiras você está. 13 perguntas, 2 minutos, com diagnóstico e próximos passos.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://links.rakan-invest.com/checklist">
+
+<!-- Pré-visualização ao compartilhar (WhatsApp, Instagram, LinkedIn) -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://links.rakan-invest.com/checklist">
+<meta property="og:title" content="Checklist Financeiro — Em qual etapa você está?">
+<meta property="og:description" content="13 perguntas, 2 minutos. Veja sua etapa financeira e os próximos passos.">
+<meta property="og:image" content="https://links.rakan-invest.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Checklist Financeiro — Em qual etapa você está?">
+<meta name="twitter:description" content="13 perguntas, 2 minutos. Veja sua etapa financeira e os próximos passos.">
+<meta name="twitter:image" content="https://links.rakan-invest.com/og-image.png">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23A0522D'/></svg>">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #1B1713;
+  --cream: #F5EFE6;
+  --cream-card: #FAF6EE;
+  --ink: #2A2520;
+  --body: #5A5249;
+  --cream-soft: #C4B8AA;
+  --terracotta: #A0522D;
+  --caramel: #C9A875;
+  --neutral: #8B7E70;
+  --green: #6B7F4A;
+  --border-cream: rgba(201,168,117,0.22);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg-deep);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  color: var(--cream);
+}
+.layer-gradient {
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% 0%, rgba(160,82,45,0.16) 0%, transparent 55%),
+    radial-gradient(ellipse 80% 50% at 50% 100%, rgba(201,168,117,0.05) 0%, transparent 60%),
+    linear-gradient(180deg, #221D18 0%, #1B1713 50%, #15110E 100%);
+}
+.layer-grid {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(245,239,230,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245,239,230,0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 100% 80% at 50% 40%, black 40%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 100% 80% at 50% 40%, black 40%, transparent 100%);
+}
+.container {
+  position: relative; z-index: 2;
+  max-width: 480px; margin: 0 auto;
+  padding: 40px 22px 48px;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+}
+
+/* ===== INTRO ===== */
+.intro { text-align: center; margin: auto 0; }
+.intro-kicker {
+  font-size: 11px; color: var(--caramel); text-transform: uppercase;
+  letter-spacing: 0.18em; font-weight: 600; margin-bottom: 16px;
+}
+.intro-title {
+  font-family: 'Fraunces', serif; font-size: clamp(30px, 9vw, 40px);
+  font-weight: 600; color: var(--cream); line-height: 1.1; margin-bottom: 14px;
+}
+.intro-sub {
+  font-size: 15px; color: var(--cream-soft); line-height: 1.55;
+  max-width: 360px; margin: 0 auto 30px;
+}
+.intro-meta {
+  font-size: 13px; color: var(--neutral); margin-bottom: 34px;
+}
+.intro-meta strong { color: var(--caramel); }
+
+/* ===== BOTÕES ===== */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+  font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600;
+  padding: 15px 32px; border-radius: 100px; border: none; cursor: pointer;
+  text-decoration: none; transition: transform 0.1s, opacity 0.2s;
+}
+.btn:active { transform: scale(0.97); }
+.btn-primary { background: var(--caramel); color: var(--ink); }
+.btn-ghost { background: transparent; color: var(--cream); border: 1px solid var(--border-cream); }
+
+/* ===== QUIZ ===== */
+.quiz { display: none; flex: 1; flex-direction: column; }
+.quiz.active { display: flex; }
+
+.progress-wrap { margin-bottom: 30px; }
+.progress-top {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 10px; font-size: 12px;
+}
+.progress-stage { color: var(--caramel); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
+.progress-count { color: var(--neutral); }
+.progress-bar { height: 4px; background: rgba(245,239,230,0.1); border-radius: 100px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--caramel); border-radius: 100px; transition: width 0.4s ease; width: 0%; }
+
+.question-area { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.q-number {
+  font-family: 'Fraunces', serif; font-size: 14px; color: var(--caramel);
+  margin-bottom: 12px; font-weight: 500;
+}
+.q-text {
+  font-family: 'Fraunces', serif; font-size: clamp(22px, 6vw, 27px);
+  font-weight: 600; color: var(--cream); line-height: 1.25; margin-bottom: 10px;
+}
+.q-hint { font-size: 13px; color: var(--neutral); font-style: italic; margin-bottom: 32px; }
+
+.answers { display: flex; flex-direction: column; gap: 12px; }
+.answer-btn {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--cream-card); border: 2px solid transparent;
+  border-radius: 14px; padding: 18px 20px; cursor: pointer;
+  text-align: left; transition: transform 0.1s, border-color 0.2s;
+  font-family: 'Inter', sans-serif; width: 100%;
+}
+.answer-btn:active { transform: scale(0.98); }
+.answer-btn:hover { border-color: var(--caramel); }
+.answer-icon {
+  flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 14px; color: var(--cream);
+}
+.answer-icon.yes { background: var(--green); }
+.answer-icon.no { background: var(--terracotta); }
+.answer-label { font-size: 15px; font-weight: 600; color: var(--ink); }
+
+.quiz-nav { margin-top: 24px; display: flex; justify-content: flex-start; }
+.back-btn {
+  background: none; border: none; color: var(--neutral); cursor: pointer;
+  font-size: 13px; font-family: 'Inter', sans-serif; padding: 8px 0;
+  display: flex; align-items: center; gap: 6px;
+}
+.back-btn:hover { color: var(--cream-soft); }
+
+/* ===== RESULTADO ===== */
+.result { display: none; flex: 1; flex-direction: column; }
+.result.active { display: flex; }
+.result-head { text-align: center; margin-bottom: 28px; }
+.result-kicker { font-size: 11px; color: var(--caramel); text-transform: uppercase; letter-spacing: 0.16em; font-weight: 600; margin-bottom: 12px; }
+.result-stage-name {
+  font-family: 'Fraunces', serif; font-size: clamp(28px, 8vw, 36px);
+  font-weight: 600; color: var(--cream); margin-bottom: 12px; line-height: 1.1;
+}
+.result-desc { font-size: 14.5px; color: var(--cream-soft); line-height: 1.55; max-width: 380px; margin: 0 auto; }
+
+.stage-track {
+  display: flex; justify-content: space-between; gap: 6px;
+  margin: 26px 0 30px;
+}
+.stage-dot { flex: 1; text-align: center; }
+.stage-dot-bar { height: 5px; border-radius: 100px; background: rgba(245,239,230,0.12); margin-bottom: 8px; }
+.stage-dot.done .stage-dot-bar { background: var(--green); }
+.stage-dot.current .stage-dot-bar { background: var(--caramel); }
+.stage-dot-label { font-size: 9px; color: var(--neutral); text-transform: uppercase; letter-spacing: 0.04em; }
+.stage-dot.current .stage-dot-label { color: var(--caramel); font-weight: 600; }
+.stage-dot.done .stage-dot-label { color: var(--cream-soft); }
+
+.result-section { margin-bottom: 24px; }
+.result-section-title {
+  font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em;
+  font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+}
+.result-section-title.works { color: var(--green); }
+.result-section-title.act { color: var(--terracotta); }
+
+.result-item {
+  background: var(--cream-card); border-radius: 12px; padding: 14px 16px;
+  margin-bottom: 9px;
+}
+.result-item-q { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 4px; line-height: 1.3; }
+.result-item-action { font-size: 13px; color: var(--body); line-height: 1.45; }
+.result-item.works .result-item-q { color: var(--ink); }
+.result-item.works .check { color: var(--green); margin-right: 6px; font-weight: 700; }
+
+.result-empty { font-size: 13px; color: var(--neutral); font-style: italic; padding: 4px 0; }
+
+/* CTA final */
+.result-cta {
+  background: var(--cream-card); border-radius: 18px; padding: 24px 22px;
+  text-align: center; margin-top: 12px; box-shadow: 0 12px 36px rgba(0,0,0,0.35);
+}
+.result-cta-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+.result-cta-text { font-size: 13.5px; color: var(--body); line-height: 1.5; margin-bottom: 18px; }
+.wa-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--terracotta); color: var(--cream);
+  font-size: 14px; font-weight: 600; padding: 13px 26px;
+  border-radius: 100px; text-decoration: none;
+}
+.wa-btn svg { width: 18px; height: 18px; fill: var(--cream); }
+
+.result-restart {
+  text-align: center; margin-top: 22px;
+}
+.result-restart button {
+  background: none; border: none; color: var(--neutral); cursor: pointer;
+  font-size: 13px; font-family: 'Inter', sans-serif; text-decoration: underline;
+}
+
+.foot { text-align: center; margin-top: 32px; }
+.foot-brand { font-family: 'Fraunces', serif; font-size: 14px; color: var(--cream); margin-bottom: 4px; }
+.foot-tag { font-size: 11px; color: var(--neutral); font-style: italic; }
+</style>
+</head>
+<body>
+
+<div class="layer-gradient"></div>
+<div class="layer-grid"></div>
+
+<div class="container">
+
+  <!-- ===== INTRO ===== -->
+  <div class="intro" id="intro">
+    <div class="intro-kicker">Checklist Financeiro</div>
+    <h1 class="intro-title">Em qual etapa você está?</h1>
+    <p class="intro-sub">13 perguntas, 2 minutos. Você sai sabendo onde está e por onde começar.</p>
+    <p class="intro-meta">Sem cadastro. <strong>É só responder.</strong></p>
+    <button class="btn btn-primary" onclick="startQuiz()">Começar →</button>
+  </div>
+
+  <!-- ===== QUIZ ===== -->
+  <div class="quiz" id="quiz">
+    <div class="progress-wrap">
+      <div class="progress-top">
+        <span class="progress-stage" id="progStage">Proteção</span>
+        <span class="progress-count" id="progCount">1 de 13</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progFill"></div></div>
+    </div>
+
+    <div class="question-area">
+      <div class="q-number" id="qNumber">Pergunta 1</div>
+      <div class="q-text" id="qText"></div>
+      <div class="q-hint" id="qHint"></div>
+      <div class="answers">
+        <button class="answer-btn" onclick="answer(true)">
+          <span class="answer-icon yes">Sim</span>
+          <span class="answer-label" id="yesLabel"></span>
+        </button>
+        <button class="answer-btn" onclick="answer(false)">
+          <span class="answer-icon no">Não</span>
+          <span class="answer-label">Ainda não</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="quiz-nav">
+      <button class="back-btn" id="backBtn" onclick="goBack()" style="visibility:hidden;">← Voltar</button>
+    </div>
+  </div>
+
+  <!-- ===== RESULTADO ===== -->
+  <div class="result" id="result">
+    <div class="result-head">
+      <div class="result-kicker">Seu resultado</div>
+      <div class="result-stage-name" id="resStageName"></div>
+      <p class="result-desc" id="resDesc"></p>
+    </div>
+
+    <div class="stage-track" id="stageTrack"></div>
+
+    <div class="result-section" id="actSection">
+      <div class="result-section-title act">→ Onde agir agora</div>
+      <div id="actList"></div>
+    </div>
+
+    <div class="result-section" id="worksSection">
+      <div class="result-section-title works">✓ O que já funciona</div>
+      <div id="worksList"></div>
+    </div>
+
+    <div class="result-cta">
+      <div class="result-cta-title" id="ctaTitle">Quer um plano pra avançar?</div>
+      <div class="result-cta-text" id="ctaText">Me chama, vamos ver onde você está e como posso te ajudar.</div>
+      <a href="https://wa.me/5511981940543" class="wa-btn" rel="noopener noreferrer">
+        <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
+        Conversar no WhatsApp
+      </a>
+    </div>
+
+    <div class="result-restart">
+      <button onclick="restart()">Refazer o checklist</button>
+    </div>
+
+    <div class="foot">
+      <div class="foot-brand">Rakan · Vida Única</div>
+      <div class="foot-tag">Cuide bem do seu dinheiro hoje. Ele vai cuidar de você amanhã.</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ===== DADOS DO CHECKLIST =====
+const STAGES = [
+  { name: "Proteção", desc: "A base de tudo. Antes de crescer, você precisa estar protegido de imprevistos." },
+  { name: "Alicerce", desc: "Com a base protegida, é hora de organizar: sair das dívidas, guardar e definir aonde quer chegar." },
+  { name: "Crescimento", desc: "Você já tem alicerce. Agora o dinheiro começa a trabalhar pra você, com consciência." },
+  { name: "Multiplicação", desc: "Sua carteira já funciona. O foco passa a ser diversificar e reduzir riscos." },
+  { name: "Visão", desc: "Você está à frente da maioria. Agora é olhar longe: aposentadoria e plano de vida." }
+];
+
+const QUESTIONS = [
+  // Etapa 0 — Proteção
+  { stage: 0, q: "Você sabe quanto ganha e gasta por mês?", yes: "Tenho controle", hint: "Sem esses números, qualquer decisão é no escuro.", action: "Anote seus gastos por 30 dias, no celular, planilha ou caderno." },
+  { stage: 0, q: "Tem dinheiro guardado para emergências?", yes: "Minha base está protegida", hint: "Um imprevisto sem reserva não é um problema, é uma crise.", action: "Guarde o equivalente a 1 mês de gastos numa conta separada." },
+  { stage: 0, q: "Tem algum seguro de vida ou saúde?", yes: "Estou protegido", hint: "Uma doença, um acidente. Quem depende de você ficaria bem?", action: "Pesquise uma cobertura básica. Não precisa ser a mais cara, precisa existir." },
+  // Etapa 1 — Alicerce
+  { stage: 1, q: "Você está livre de dívidas de cartão ou cheque especial?", yes: "Estou livre de dívidas", hint: "O banco cobra até 300% ao ano. Nenhum investimento paga isso.", action: "Quite essas dívidas antes de investir qualquer coisa." },
+  { stage: 1, q: "Consegue guardar algum dinheiro todo mês, mesmo que pouco?", yes: "Consigo guardar", hint: "Guardar parte da renda é o que separa quem acumula de quem não acumula.", action: "Assim que receber, separe um valor fixo antes de gastar." },
+  { stage: 1, q: "Você sabe o que quer alcançar financeiramente?", yes: "Sei onde quero chegar", hint: "Se você não sabe o que quer, qualquer lugar serve.", action: "Defina um objetivo com valor e prazo para os próximos 12 meses." },
+  // Etapa 2 — Crescimento
+  { stage: 2, q: "Já investe em algo além da poupança?", yes: "Já saí da poupança", hint: "A poupança perde pra inflação na maioria dos anos. Você perde poder de compra.", action: "Tesouro Direto e CDBs são os próximos passos: acessíveis e melhores." },
+  { stage: 2, q: "Você sabe em que está investindo e por quê?", yes: "Entendo o que invisto", hint: "Investir sem entender é aposta, só que com nome bonito.", action: "Antes de investir, entenda o risco e, principalmente, o prazo." },
+  { stage: 2, q: "Revisa os investimentos pelo menos uma vez por ano?", yes: "Acompanho minha carteira", hint: "Seus objetivos mudam, e a carteira precisa acompanhar.", action: "Reserve uma data fixa no ano para revisar tudo." },
+  // Etapa 3 — Multiplicação
+  { stage: 3, q: "Você tem mais de um tipo de investimento?", yes: "Minha carteira é diversificada", hint: "Concentrar tudo num lugar é um risco que não precisa correr.", action: "Renda fixa, ações, fundos imobiliários e internacionais se complementam." },
+  { stage: 3, q: "Você tem algum investimento internacional?", yes: "Tenho parte internacional", hint: "Depender só da moeda brasileira é um risco silencioso.", action: "Ativos internacionais ajudam a proteger e rentabilizar a carteira." },
+  // Etapa 4 — Visão
+  { stage: 4, q: "Pensa na aposentadoria e sabe de quanto vai precisar?", yes: "Ajo hoje pensando no futuro", hint: "Aposentadoria não é parar de trabalhar, é ter liberdade.", action: "Descubra de quanto vai precisar. Com isso, dá pra calcular quanto investir hoje." },
+  { stage: 4, q: "Tem um planejamento financeiro pessoal, mesmo que simples?", yes: "Tenho um plano", hint: "Quem não planeja improvisa. E improviso financeiro tem custo.", action: "Defina onde está hoje e onde quer estar, e monte o plano." }
+];
+
+let current = 0;
+let answers = new Array(QUESTIONS.length).fill(null);
+
+function startQuiz() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('quiz').classList.add('active');
+  current = 0;
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[current];
+  document.getElementById('progStage').textContent = STAGES[q.stage].name;
+  document.getElementById('progCount').textContent = (current + 1) + ' de ' + QUESTIONS.length;
+  document.getElementById('progFill').style.width = ((current) / QUESTIONS.length * 100) + '%';
+  document.getElementById('qNumber').textContent = 'Pergunta ' + (current + 1);
+  document.getElementById('qText').textContent = q.q;
+  document.getElementById('qHint').textContent = q.hint;
+  document.getElementById('yesLabel').textContent = q.yes;
+  document.getElementById('backBtn').style.visibility = current > 0 ? 'visible' : 'hidden';
+}
+
+function answer(isYes) {
+  answers[current] = isYes;
+  if (current < QUESTIONS.length - 1) {
+    current++;
+    renderQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function goBack() {
+  if (current > 0) { current--; renderQuestion(); }
+}
+
+function showResult() {
+  document.getElementById('progFill').style.width = '100%';
+  document.getElementById('quiz').classList.remove('active');
+  document.getElementById('result').classList.add('active');
+
+  // Etapa = primeiro NÃO. Se tudo SIM, fica na última (Visão), completa.
+  let firstNoIndex = answers.findIndex(a => a === false);
+  let allYes = firstNoIndex === -1;
+  let stageIndex = allYes ? 4 : QUESTIONS[firstNoIndex].stage;
+
+  // Nome e descrição da etapa
+  if (allYes) {
+    document.getElementById('resStageName').textContent = "Você está no topo";
+    document.getElementById('resDesc').textContent = "Parabéns. Você passou por todas as etapas: proteção, alicerce, crescimento, multiplicação e visão. Sua casa financeira está em ordem.";
+  } else {
+    document.getElementById('resStageName').textContent = STAGES[stageIndex].name;
+    document.getElementById('resDesc').textContent = STAGES[stageIndex].desc;
+  }
+
+  // Trilha das 5 etapas
+  const track = document.getElementById('stageTrack');
+  track.innerHTML = '';
+  STAGES.forEach((s, i) => {
+    let cls = 'stage-dot';
+    if (allYes) cls += ' done';
+    else if (i < stageIndex) cls += ' done';
+    else if (i === stageIndex) cls += ' current';
+    track.innerHTML += '<div class="' + cls + '"><div class="stage-dot-bar"></div><div class="stage-dot-label">' + s.name + '</div></div>';
+  });
+
+  // Onde agir: os NÃOs (todos)
+  const actList = document.getElementById('actList');
+  actList.innerHTML = '';
+  let noItems = [];
+  answers.forEach((a, i) => { if (a === false) noItems.push(i); });
+  if (noItems.length === 0) {
+    actList.innerHTML = '<div class="result-empty">Nada pendente. Você respondeu sim em tudo.</div>';
+  } else {
+    noItems.forEach(i => {
+      actList.innerHTML += '<div class="result-item"><div class="result-item-q">' + QUESTIONS[i].q + '</div><div class="result-item-action">' + QUESTIONS[i].action + '</div></div>';
+    });
+  }
+
+  // O que já funciona: os SIMs
+  const worksList = document.getElementById('worksList');
+  worksList.innerHTML = '';
+  let yesItems = [];
+  answers.forEach((a, i) => { if (a === true) yesItems.push(i); });
+  if (yesItems.length === 0) {
+    worksList.innerHTML = '<div class="result-empty">Tudo bem começar do zero. O importante é ter dado o primeiro passo: este checklist.</div>';
+  } else {
+    yesItems.forEach(i => {
+      worksList.innerHTML += '<div class="result-item works"><div class="result-item-q"><span class="check">✓</span>' + QUESTIONS[i].yes + '</div></div>';
+    });
+  }
+
+  // CTA adapta levemente ao resultado
+  if (allYes) {
+    document.getElementById('ctaTitle').textContent = "Vamos manter no rumo?";
+    document.getElementById('ctaText').textContent = "Você está bem. Se quiser uma segunda visão sobre sua carteira, me chama.";
+  }
+
+  window.scrollTo(0, 0);
+}
+
+function restart() {
+  answers = new Array(QUESTIONS.length).fill(null);
+  current = 0;
+  document.getElementById('result').classList.remove('active');
+  document.getElementById('intro').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+</script>
+
+</body>
+</html>
