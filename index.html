@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arthur Notaroberto · Consultor Financeiro</title>
+<meta name="description" content="Planejamento financeiro com Arthur Notaroberto — cuidando do seu amanhã. Fale comigo no WhatsApp.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://links.rakan-invest.com/">
+
+<!-- Pré-visualização ao compartilhar (WhatsApp, Instagram, LinkedIn) -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://links.rakan-invest.com/">
+<meta property="og:title" content="Arthur Notaroberto · Consultor Financeiro">
+<meta property="og:description" content="Planejamento financeiro cuidando do seu amanhã. Vamos conversar.">
+<meta property="og:image" content="https://links.rakan-invest.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Arthur Notaroberto · Consultor Financeiro">
+<meta name="twitter:description" content="Planejamento financeiro cuidando do seu amanhã. Vamos conversar.">
+<meta name="twitter:image" content="https://links.rakan-invest.com/og-image.png">
+
+<!-- Favicon placeholder (círculo terracota). Trocar pela logo da Rakan quando houver. -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23A0522D'/></svg>">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #1B1713;
+  --cream: #F5EFE6;
+  --cream-card: #FAF6EE;
+  --ink: #2A2520;
+  --body: #5A5249;
+  --cream-soft: #C4B8AA;
+  --terracotta: #A0522D;
+  --caramel: #C9A875;
+  --neutral: #8B7E70;
+  --border-cream: rgba(201,168,117,0.25);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg-deep);
+  min-height: 100vh; position: relative; overflow-x: hidden;
+}
+
+.layer-gradient {
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% 0%, rgba(160,82,45,0.16) 0%, transparent 55%),
+    radial-gradient(ellipse 80% 50% at 50% 100%, rgba(201,168,117,0.05) 0%, transparent 60%),
+    linear-gradient(180deg, #221D18 0%, #1B1713 50%, #15110E 100%);
+}
+.layer-grid {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(245,239,230,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245,239,230,0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 100% 80% at 50% 40%, black 40%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 100% 80% at 50% 40%, black 40%, transparent 100%);
+}
+
+.container { position: relative; z-index: 2; max-width: 460px; margin: 0 auto; padding: 52px 22px 40px; }
+
+.head { text-align: center; margin-bottom: 36px; }
+.avatar {
+  width: 92px; height: 92px; border-radius: 50%; margin: 0 auto 18px;
+  background: linear-gradient(135deg, var(--caramel), var(--terracotta));
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fraunces', serif; font-size: 30px; color: var(--cream);
+  border: 1px solid rgba(201,168,117,0.3); box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  overflow: hidden;
+}
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.name { font-family: 'Fraunces', serif; font-size: clamp(24px, 6vw, 28px); font-weight: 600; color: var(--cream); letter-spacing: -0.3px; margin-bottom: 8px; }
+.tagline { font-size: 14px; color: var(--cream-soft); line-height: 1.5; max-width: 300px; margin: 0 auto; }
+
+/* Ícones de redes sociais acima do card de planejamento */
+.socials {
+  display: flex; justify-content: center; gap: 14px;
+  margin-bottom: 22px;
+}
+.social-link {
+  display: flex; align-items: center; justify-content: center;
+  width: 42px; height: 42px; border-radius: 50%;
+  background: #1B1713;
+  border: 1px solid rgba(201,168,117,0.2);
+  text-decoration: none;
+  transition: border-color 0.2s, transform 0.1s;
+}
+.social-link svg { width: 19px; height: 19px; fill: var(--cream); transition: fill 0.2s; }
+.social-link:active { border-color: var(--caramel); transform: scale(0.95); }
+.social-link:active svg { fill: var(--caramel); }
+@media (hover: hover) {
+  .social-link:hover { border-color: var(--caramel); }
+  .social-link:hover svg { fill: var(--caramel); }
+}
+
+/* Card principal - menor, imagem menor, sem badge, seta 20px */
+.card-hero {
+  background: var(--cream-card); border-radius: 18px; overflow: hidden;
+  margin-bottom: 16px; box-shadow: 0 14px 38px rgba(0,0,0,0.38);
+  text-decoration: none; display: block;
+}
+.card-hero-img {
+  height: 96px;
+  background:
+    radial-gradient(ellipse at 30% 30%, rgba(201,168,117,0.5) 0%, transparent 60%),
+    linear-gradient(135deg, var(--caramel) 0%, var(--terracotta) 100%);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.55); font-size: 11px; letter-spacing: 0.05em;
+}
+.card-hero-body { padding: 18px 22px; }
+.card-hero-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.card-hero-title { font-family: 'Fraunces', serif; font-size: 19px; font-weight: 600; color: var(--ink); margin-bottom: 4px; letter-spacing: -0.3px; }
+.card-hero-desc { font-size: 13px; color: var(--body); line-height: 1.5; }
+.card-hero .arrow { color: var(--terracotta); font-size: 20px; flex-shrink: 0; margin-left: 16px; }
+
+/* Card WhatsApp */
+.card-small {
+  background: var(--cream-card); border-radius: 16px; padding: 18px 22px; margin-bottom: 28px;
+  display: flex; align-items: center; justify-content: space-between; text-decoration: none;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  transition: transform 0.1s, box-shadow 0.2s;
+}
+.card-small:active { transform: scale(0.99); }
+@media (hover: hover) { .card-small:hover { box-shadow: 0 14px 36px rgba(0,0,0,0.4); } }
+.card-small-left { display: flex; align-items: center; gap: 14px; }
+.wa-circle {
+  flex-shrink: 0;
+  width: 42px; height: 42px; border-radius: 50%;
+  background: #1B1713;
+  display: flex; align-items: center; justify-content: center;
+}
+.wa-circle svg { width: 22px; height: 22px; fill: var(--cream); }
+.card-small-title { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+.card-small-desc { font-size: 12.5px; color: var(--body); line-height: 1.4; }
+.card-small .arrow { color: var(--terracotta); font-size: 20px; flex-shrink: 0; margin-left: 16px; }
+
+.foot { text-align: center; margin-top: 8px; }
+.foot-brand { font-family: 'Fraunces', serif; font-size: 15px; color: var(--cream); margin-bottom: 4px; }
+.foot-tag { font-size: 11px; color: var(--neutral); }
+</style>
+</head>
+<body>
+
+<div class="layer-gradient"></div>
+<div class="layer-grid"></div>
+
+<div class="container">
+
+  <div class="head">
+    <!-- Avatar: trocar o "AN" por <img src="foto.jpg" alt="Arthur Notaroberto"> quando houver a foto -->
+    <div class="avatar">AN</div>
+    <div class="name">Arthur Notaroberto</div>
+    <div class="tagline">Consultor financeiro, cuidando do seu amanhã.</div>
+  </div>
+
+  <!-- Redes sociais -->
+  <div class="socials">
+    <a href="https://instagram.com/arthur.notaroberto" class="social-link" aria-label="Instagram" rel="noopener noreferrer">
+      <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/in/arthur-notaroberto-b57144195/" class="social-link" aria-label="LinkedIn" rel="noopener noreferrer">
+      <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg>
+    </a>
+    <!-- YouTube: oculto até o canal existir. Para reativar, descomente e troque o href="#" pelo canal. -->
+    <!--
+    <a href="#" class="social-link" aria-label="YouTube" rel="noopener noreferrer">
+      <svg viewBox="0 0 576 512" xmlns="http://www.w3.org/2000/svg"><path d="M549.7 124.1c-6.3-23.7-24.8-42.3-48.3-48.6C458.8 64 288 64 288 64S117.2 64 74.6 75.5c-23.5 6.3-42 24.9-48.3 48.6-11.4 42.9-11.4 132.3-11.4 132.3s0 89.4 11.4 132.3c6.3 23.7 24.8 41.5 48.3 47.8C117.2 448 288 448 288 448s170.8 0 213.4-11.5c23.5-6.3 42-24.2 48.3-47.8 11.4-42.9 11.4-132.3 11.4-132.3s0-89.4-11.4-132.3zm-317.5 213.5V175.2l142.7 81.2-142.7 81.2z"/></svg>
+    </a>
+    -->
+  </div>
+
+  <!-- 1. Planejamento - bloco de apresentação (não clicável, sem seta) -->
+  <div class="card-hero">
+    <!-- Imagem: trocar o placeholder por <img> da imagem real do planejamento -->
+    <div class="card-hero-img">[ imagem do planejamento ]</div>
+    <div class="card-hero-body">
+      <div class="card-hero-title">Planejamento Financeiro</div>
+      <div class="card-hero-desc">Te conheço, entendo suas necessidades e sonhos, e agimos.</div>
+    </div>
+  </div>
+
+  <!-- 2. WhatsApp -->
+  <a href="https://wa.me/5511981940543" class="card-small" rel="noopener noreferrer">
+    <div class="card-small-left">
+      <div class="wa-circle">
+        <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
+      </div>
+      <div>
+        <div class="card-small-title">Vamos conversar</div>
+        <div class="card-small-desc">Me chama, vamos ver como posso te ajudar.</div>
+      </div>
+    </div>
+    <span class="arrow">→</span>
+  </a>
+
+  <div class="foot">
+    <div class="foot-brand">Rakan · Vida Única</div>
+    <div class="foot-tag">Viva bem hoje sem comprometer o amanhã.</div>
+  </div>
+
+</div>
+
+</body>
+</html>
