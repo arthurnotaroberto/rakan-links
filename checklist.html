@@ -177,6 +177,9 @@ body {
 .stage-dot-label { font-size: 9px; color: var(--neutral); text-transform: uppercase; letter-spacing: 0.04em; }
 .stage-dot.current .stage-dot-label { color: var(--caramel); font-weight: 600; }
 .stage-dot.done .stage-dot-label { color: var(--cream-soft); }
+.stage-dot-frac { font-size: 9px; color: var(--neutral); margin-top: 2px; font-weight: 600; }
+.stage-dot.current .stage-dot-frac { color: var(--caramel); }
+.stage-dot.done .stage-dot-frac { color: var(--green); }
 
 .result-section { margin-bottom: 24px; }
 .result-section-title {
@@ -297,7 +300,7 @@ body {
 
     <div class="result-actions">
       <a href="/simuladores" class="action-card">
-        <div class="action-icon"><span class="emoji">📊</span></div>
+        <div class="action-icon"><svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M32 32c17.7 0 32 14.3 32 32V400c0 8.8 7.2 16 16 16H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H80c-44.2 0-80-35.8-80-80V64C0 46.3 14.3 32 32 32zM160 224c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32s-32-14.3-32-32V256c0-17.7 14.3-32 32-32zm128-64V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V160c0-17.7 14.3-32 32-32s32 14.3 32 32zm64 32c17.7 0 32 14.3 32 32v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V224c0-17.7 14.3-32 32-32zM480 96V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V96c0-17.7 14.3-32 32-32s32 14.3 32 32z"/></svg></div>
         <div class="action-body">
           <div class="action-title">Simule seus números</div>
           <div class="action-desc">Veja na prática quanto falta pra cada objetivo.</div>
@@ -400,36 +403,54 @@ function showResult() {
   document.getElementById('quiz').classList.remove('active');
   document.getElementById('result').classList.add('active');
 
-  // Etapa = primeiro NÃO. Se tudo SIM, fica na última (Visão), completa.
-  let firstNoIndex = answers.findIndex(a => a === false);
-  let allYes = firstNoIndex === -1;
-  let stageIndex = allYes ? 4 : QUESTIONS[firstNoIndex].stage;
+  // === LÓGICA POR NÍVEL (completude) ===
+  // Para cada etapa, conta sim/total. Uma etapa é "dominada" se a maioria é sim.
+  // A etapa atual é a primeira NÃO dominada. Furos isolados em etapas dominadas não derrubam.
+  const stageStats = STAGES.map((s, idx) => {
+    const qs = QUESTIONS.filter(q => q.stage === idx);
+    const total = qs.length;
+    const sims = QUESTIONS.reduce((acc, q, i) => acc + (q.stage === idx && answers[i] === true ? 1 : 0), 0);
+    const dominada = sims > total / 2; // maioria sim
+    return { total, sims, dominada };
+  });
 
-  // Nome e descrição da etapa
-  if (allYes) {
+  // Primeira etapa não dominada
+  let stageIndex = stageStats.findIndex(s => !s.dominada);
+  const allDominated = stageIndex === -1;
+  if (allDominated) stageIndex = 4;
+
+  // Nome e descrição
+  if (allDominated) {
     document.getElementById('resStageName').textContent = "Você está no topo";
-    document.getElementById('resDesc').textContent = "Parabéns. Você passou por todas as etapas: proteção, alicerce, crescimento, multiplicação e visão. Sua casa financeira está em ordem.";
+    document.getElementById('resDesc').textContent = "Você dominou todas as fases: proteção, alicerce, crescimento, multiplicação e visão. Sua casa financeira está em ordem. Agora é refinar e manter.";
   } else {
     document.getElementById('resStageName').textContent = STAGES[stageIndex].name;
     document.getElementById('resDesc').textContent = STAGES[stageIndex].desc;
   }
 
-  // Trilha das 5 etapas
+  // Trilha das 5 etapas, com status real (X/Y)
   const track = document.getElementById('stageTrack');
   track.innerHTML = '';
   STAGES.forEach((s, i) => {
     let cls = 'stage-dot';
-    if (allYes) cls += ' done';
-    else if (i < stageIndex) cls += ' done';
+    if (allDominated || stageStats[i].dominada) cls += ' done';
     else if (i === stageIndex) cls += ' current';
-    track.innerHTML += '<div class="' + cls + '"><div class="stage-dot-bar"></div><div class="stage-dot-label">' + s.name + '</div></div>';
+    const frac = stageStats[i].sims + '/' + stageStats[i].total;
+    track.innerHTML += '<div class="' + cls + '"><div class="stage-dot-bar"></div><div class="stage-dot-label">' + s.name + '</div><div class="stage-dot-frac">' + frac + '</div></div>';
   });
 
-  // Onde agir: os NÃOs (todos)
+  // Onde agir: APENAS os NÃOs da etapa atual e das próximas (foco no que vem),
+  // mas mostrando primeiro os da etapa atual.
   const actList = document.getElementById('actList');
   actList.innerHTML = '';
   let noItems = [];
   answers.forEach((a, i) => { if (a === false) noItems.push(i); });
+  // ordena: nãos da etapa atual primeiro, depois o resto em ordem
+  noItems.sort((a, b) => {
+    const pa = QUESTIONS[a].stage === stageIndex ? 0 : 1;
+    const pb = QUESTIONS[b].stage === stageIndex ? 0 : 1;
+    return pa - pb || a - b;
+  });
   if (noItems.length === 0) {
     actList.innerHTML = '<div class="result-empty">Nada pendente. Você respondeu sim em tudo.</div>';
   } else {
@@ -451,8 +472,8 @@ function showResult() {
     });
   }
 
-  // CTA adapta levemente ao resultado
-  if (allYes) {
+  // CTA adapta ao resultado
+  if (allDominated) {
     document.getElementById('ctaTitle').textContent = "Vamos manter no rumo?";
     document.getElementById('ctaText').textContent = "Você está bem. Se quiser uma segunda visão sobre sua carteira, me chama.";
   }
