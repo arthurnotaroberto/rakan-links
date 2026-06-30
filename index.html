@@ -146,6 +146,13 @@ body {
   display: flex; align-items: center; justify-content: center;
 }
 .quiz-circle svg { width: 19px; height: 19px; fill: var(--caramel); }
+.sim-circle {
+  flex-shrink: 0;
+  width: 42px; height: 42px; border-radius: 50%;
+  background: #1B1713;
+  display: flex; align-items: center; justify-content: center;
+}
+.sim-circle svg { width: 20px; height: 20px; fill: var(--caramel); }
 .card-small-title { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
 .card-small-desc { font-size: 12.5px; color: var(--body); line-height: 1.4; }
 .card-small .arrow { color: var(--terracotta); font-size: 20px; flex-shrink: 0; margin-left: 16px; }
@@ -209,7 +216,21 @@ body {
     <span class="arrow">→</span>
   </a>
 
-  <!-- 3. WhatsApp -->
+  <!-- 3. Simuladores (mesmo site, página /simuladores) -->
+  <a href="/simuladores" class="card-small">
+    <div class="card-small-left">
+      <div class="sim-circle">
+        <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M32 32c17.7 0 32 14.3 32 32V400c0 8.8 7.2 16 16 16H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H80c-44.2 0-80-35.8-80-80V64C0 46.3 14.3 32 32 32zM160 224c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32s-32-14.3-32-32V256c0-17.7 14.3-32 32-32zm128-64V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V160c0-17.7 14.3-32 32-32s32 14.3 32 32zm64 32c17.7 0 32 14.3 32 32v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V224c0-17.7 14.3-32 32-32zM480 96V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V96c0-17.7 14.3-32 32-32s32 14.3 32 32z"/></svg>
+      </div>
+      <div>
+        <div class="card-small-title">Simuladores</div>
+        <div class="card-small-desc">Veja seus números e projete seus objetivos.</div>
+      </div>
+    </div>
+    <span class="arrow">→</span>
+  </a>
+
+  <!-- 4. WhatsApp -->
   <a href="https://wa.me/5511981940543" class="card-small" rel="noopener noreferrer">
     <div class="card-small-left">
       <div class="wa-circle">

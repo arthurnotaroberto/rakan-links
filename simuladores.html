@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simuladores — Arthur Notaroberto</title>
+<meta name="description" content="Quatro simuladores financeiros: reserva de emergência, juros compostos, objetivo e independência. Mexa nos valores e veja o resultado na hora.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://links.rakan-invest.com/simuladores">
+
+<!-- Pré-visualização ao compartilhar (WhatsApp, Instagram, LinkedIn) -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://links.rakan-invest.com/simuladores">
+<meta property="og:title" content="Simuladores — Veja seus números antes de decidir">
+<meta property="og:description" content="Reserva, juros compostos, objetivo e independência financeira. Calcule na hora.">
+<meta property="og:image" content="https://links.rakan-invest.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Simuladores — Veja seus números antes de decidir">
+<meta name="twitter:description" content="Reserva, juros compostos, objetivo e independência financeira. Calcule na hora.">
+<meta name="twitter:image" content="https://links.rakan-invest.com/og-image.png">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23A0522D'/></svg>">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg-deep: #1B1713;
+  --cream: #F5EFE6;
+  --cream-card: #FAF6EE;
+  --ink: #2A2520;
+  --body: #5A5249;
+  --cream-soft: #C4B8AA;
+  --terracotta: #A0522D;
+  --caramel: #C9A875;
+  --neutral: #8B7E70;
+  --green: #6B7F4A;
+  --border-cream: rgba(201,168,117,0.22);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg-deep);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  color: var(--cream);
+}
+.layer-gradient {
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% 0%, rgba(160,82,45,0.16) 0%, transparent 55%),
+    radial-gradient(ellipse 80% 50% at 50% 100%, rgba(201,168,117,0.05) 0%, transparent 60%),
+    linear-gradient(180deg, #221D18 0%, #1B1713 50%, #15110E 100%);
+}
+.layer-grid {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(245,239,230,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245,239,230,0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 100% 80% at 50% 30%, black 40%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 100% 80% at 50% 30%, black 40%, transparent 100%);
+}
+.container { position: relative; z-index: 2; max-width: 480px; margin: 0 auto; padding: 40px 20px 48px; }
+
+.head { text-align: center; margin-bottom: 28px; }
+.head-kicker { font-size: 11px; color: var(--caramel); text-transform: uppercase; letter-spacing: 0.16em; font-weight: 600; margin-bottom: 10px; }
+.head-title { font-family: 'Fraunces', serif; font-size: clamp(26px, 7vw, 32px); font-weight: 600; color: var(--cream); line-height: 1.1; margin-bottom: 10px; }
+.head-sub { font-size: 14px; color: var(--cream-soft); line-height: 1.5; max-width: 360px; margin: 0 auto; }
+
+.selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 26px; }
+.sel-btn { background: rgba(250,246,238,0.04); border: 1px solid var(--border-cream); border-radius: 14px; padding: 14px 12px; cursor: pointer; text-align: left; transition: all 0.15s; display: flex; flex-direction: column; gap: 4px; }
+.sel-btn:active { transform: scale(0.98); }
+.sel-btn.active { background: var(--cream-card); border-color: var(--caramel); }
+.sel-btn-icon { font-size: 18px; margin-bottom: 2px; }
+.sel-btn-title { font-family: 'Fraunces', serif; font-size: 14px; font-weight: 600; color: var(--cream); line-height: 1.2; }
+.sel-btn.active .sel-btn-title { color: var(--ink); }
+.sel-btn-desc { font-size: 10.5px; color: var(--cream-soft); line-height: 1.3; }
+.sel-btn.active .sel-btn-desc { color: var(--body); }
+
+.sim-panel { background: var(--cream-card); border-radius: 20px; padding: 24px 22px; box-shadow: 0 16px 44px rgba(0,0,0,0.4); margin-bottom: 18px; }
+.sim-title { font-family: 'Fraunces', serif; font-size: 21px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+.sim-intro { font-size: 13px; color: var(--body); line-height: 1.5; margin-bottom: 22px; }
+
+.field { margin-bottom: 18px; }
+.field-label { display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+.field-hint { font-size: 11px; color: var(--neutral); font-weight: 400; }
+.input-wrap { position: relative; display: flex; align-items: center; }
+.input-prefix { position: absolute; left: 14px; font-size: 14px; color: var(--neutral); font-weight: 600; pointer-events: none; }
+.input-suffix { position: absolute; right: 14px; font-size: 13px; color: var(--neutral); pointer-events: none; }
+.field input[type="number"] { width: 100%; padding: 13px 14px; border: 1.5px solid rgba(201,168,117,0.35); border-radius: 11px; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600; color: var(--ink); background: #fff; outline: none; transition: border-color 0.15s; }
+.field input.has-prefix { padding-left: 38px; }
+.field input.has-suffix { padding-right: 52px; }
+.field input:focus { border-color: var(--terracotta); }
+
+/* Gráfico */
+.chart-box { margin-top: 22px; background: #fff; border-radius: 14px; padding: 16px 12px 10px; border: 1px solid rgba(201,168,117,0.2); }
+.chart-canvas-wrap { position: relative; height: 180px; }
+.chart-legend { display: flex; justify-content: center; gap: 18px; margin-top: 12px; flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--body); }
+.legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+
+.sim-result { background: linear-gradient(160deg, var(--ink) 0%, #1B1713 100%); border-radius: 16px; padding: 22px; margin-top: 18px; text-align: center; }
+.sim-result-label { font-size: 12px; color: var(--cream-soft); margin-bottom: 8px; }
+.sim-result-value { font-family: 'Fraunces', serif; font-size: clamp(28px, 8vw, 36px); font-weight: 600; color: var(--caramel); line-height: 1.1; margin-bottom: 10px; }
+.sim-result-detail { font-size: 13px; color: var(--cream-soft); line-height: 1.5; }
+.sim-result-detail strong { color: var(--cream); }
+.rate-note { font-size: 11px; color: var(--neutral); margin-top: 14px; text-align: center; line-height: 1.5; font-style: italic; }
+
+.sim-cta { background: var(--cream-card); border-radius: 18px; padding: 22px; text-align: center; box-shadow: 0 12px 36px rgba(0,0,0,0.35); }
+.sim-cta-title { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+.sim-cta-text { font-size: 13px; color: var(--body); line-height: 1.5; margin-bottom: 16px; }
+.wa-btn { display: inline-flex; align-items: center; gap: 10px; background: var(--terracotta); color: var(--cream); font-size: 14px; font-weight: 600; padding: 13px 26px; border-radius: 100px; text-decoration: none; }
+.wa-btn svg { width: 18px; height: 18px; fill: var(--cream); }
+
+.foot { text-align: center; margin-top: 28px; }
+.foot-brand { font-family: 'Fraunces', serif; font-size: 14px; color: var(--cream); margin-bottom: 4px; }
+.foot-tag { font-size: 11px; color: var(--neutral); font-style: italic; }
+</style>
+</head>
+<body>
+
+<div class="layer-gradient"></div>
+<div class="layer-grid"></div>
+
+<div class="container">
+
+  <div class="head">
+    <div class="head-kicker">Simuladores</div>
+    <h1 class="head-title">Veja seus números antes de decidir</h1>
+    <p class="head-sub">Quatro contas que ajudam a enxergar seu dinheiro com clareza. Mexa nos valores e veja o resultado na hora.</p>
+  </div>
+
+  <div class="selector">
+    <button class="sel-btn active" data-sim="reserva" onclick="selectSim('reserva')">
+      <span class="sel-btn-icon">🛡️</span>
+      <span class="sel-btn-title">Reserva de emergência</span>
+      <span class="sel-btn-desc">Quantos meses você aguenta</span>
+    </button>
+    <button class="sel-btn" data-sim="juros" onclick="selectSim('juros')">
+      <span class="sel-btn-icon">📈</span>
+      <span class="sel-btn-title">Juros compostos</span>
+      <span class="sel-btn-desc">Quanto seu dinheiro rende</span>
+    </button>
+    <button class="sel-btn" data-sim="objetivo" onclick="selectSim('objetivo')">
+      <span class="sel-btn-icon">🎯</span>
+      <span class="sel-btn-title">Objetivo</span>
+      <span class="sel-btn-desc">Quanto guardar por mês</span>
+    </button>
+    <button class="sel-btn" data-sim="aposentadoria" onclick="selectSim('aposentadoria')">
+      <span class="sel-btn-icon">🌅</span>
+      <span class="sel-btn-title">Independência</span>
+      <span class="sel-btn-desc">Renda sem depender do trabalho</span>
+    </button>
+  </div>
+
+  <!-- ===== RESERVA ===== -->
+  <div class="sim-panel" id="panel-reserva">
+    <div class="sim-title">Reserva de emergência</div>
+    <p class="sim-intro">A base de tudo. Antes de investir, é o dinheiro que te protege de um imprevisto sem virar crise.</p>
+    <div class="field">
+      <div class="field-label">Quanto você gasta por mês?</div>
+      <div class="input-wrap"><span class="input-prefix">R$</span><input type="number" id="r-gasto" class="has-prefix" value="4000" oninput="calcReserva()"></div>
+    </div>
+    <div class="field">
+      <div class="field-label">Quanto você já tem guardado?</div>
+      <div class="input-wrap"><span class="input-prefix">R$</span><input type="number" id="r-guardado" class="has-prefix" value="5000" oninput="calcReserva()"></div>
+    </div>
+    <div class="field">
+      <div class="field-label">Quantos meses quer cobrir? <span class="field-hint">padrão: 6</span></div>
+      <div class="input-wrap"><input type="number" id="r-meses" class="has-suffix" value="6" oninput="calcReserva()"><span class="input-suffix">meses</span></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-canvas-wrap"><canvas id="chart-reserva"></canvas></div>
+      <div class="chart-legend">
+        <div class="legend-item"><span class="legend-dot" style="background:#6B7F4A;"></span> Você já tem</div>
+        <div class="legend-item"><span class="legend-dot" style="background:rgba(160,82,45,0.25);"></span> Falta guardar</div>
+      </div>
+    </div>
+    <div class="sim-result" id="r-result"></div>
+  </div>
+
+  <!-- ===== JUROS ===== -->
+  <div class="sim-panel" id="panel-juros" style="display:none;">
+    <div class="sim-title">Juros compostos</div>
+    <p class="sim-intro">O efeito de deixar o dinheiro render sobre o que já rendeu. Quanto mais cedo começa, mais forte fica.</p>
+    <div class="field">
+      <div class="field-label">Quanto você tem hoje?</div>
+      <div class="input-wrap"><span class="input-prefix">R$</span><input type="number" id="j-inicial" class="has-prefix" value="1000" oninput="calcJuros()"></div>
+    </div>
+    <div class="field">
+      <div class="field-label">Quanto vai guardar por mês?</div>
+      <div class="input-wrap"><span class="input-prefix">R$</span><input type="number" id="j-aporte" class="has-prefix" value="500" oninput="calcJuros()"></div>
+    </div>
+    <div class="field">
+      <div class="field-label">Por quantos anos?</div>
+      <div class="input-wrap"><input type="number" id="j-anos" class="has-suffix" value="10" oninput="calcJuros()"><span class="input-suffix">anos</span></div>
+    </div>
+    <div class="field">
+      <div class="field-label">Rendimento ao ano <span class="field-hint">padrão: 10%</span></div>
+      <div class="input-wrap"><input type="number" id="j-taxa" class="has-suffix" value="10" step="0.5" oninput="calcJuros()"><span class="input-suffix">% a.a.</span></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-canvas-wrap"><canvas id="chart-juros"></canvas></div>
+      <div class="chart-legend">
+        <div class="legend-item"><span class="legend-dot" style="background:#8B7E70;"></span> O que você colocou</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#C9A875;"></span> Juros</div>
+      </div>
+    </div>
+    <div class="sim-result" id="j-result"></div>
+    <p class="rate-note">Rendimento é uma estimativa, não promessa. O resultado real depende de onde você investe e do cenário econômico.</p>
+  </div>
+
+  <!-- ===== OBJETIVO ===== -->
+  <div class="sim-panel" id="panel-objetivo" style="display:none;">
+    <div class="sim-title">Quanto guardar pra um objetivo</div>
+    <p class="sim-intro">Casa, carro, viagem, intercâmbio. Coloque o valor e o prazo, e veja quanto isso pede por mês.</p>
+    <div class="field">
+      <div class="field-label">Quanto custa o objetivo?</div>
+      <div class="input-wrap"><span class="input-prefix">R$</span><input type="number" id="o-valor" class="has-prefix" value="50000" oninput="calcObjetivo()"></div>
+    </div>
+    <div class="field">
+      <div class="field-label">Quanto você já tem pra ele?</div>
+      <div class="input-wrap"><span class="input-prefix">R$</span><input type="number" id="o-tem" class="has-prefix" value="0" oninput="calcObjetivo()"></div>
+    </div>
+    <div class="field">
+      <div class="field-label">Em quanto tempo?</div>
+      <div class="input-wrap"><input type="number" id="o-meses" class="has-suffix" value="24" oninput="calcObjetivo()"><span class="input-suffix">meses</span></div>
+    </div>
+    <div class="field">
+      <div class="field-label">Rendimento ao ano <span class="field-hint">padrão: 10%</span></div>
+      <div class="input-wrap"><input type="number" id="o-taxa" class="has-suffix" value="10" step="0.5" oninput="calcObjetivo()"><span class="input-suffix">% a.a.</span></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-canvas-wrap"><canvas id="chart-objetivo"></canvas></div>
+      <div class="chart-legend">
+        <div class="legend-item"><span class="legend-dot" style="background:#C9A875;"></span> Seu dinheiro crescendo</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#A0522D;"></span> Meta</div>
+      </div>
+    </div>
+    <div class="sim-result" id="o-result"></div>
+    <p class="rate-note">Rendimento é uma estimativa. Considera que o que você já guardou também rende no período.</p>
+  </div>
+
+  <!-- ===== APOSENTADORIA ===== -->
+  <div class="sim-panel" id="panel-aposentadoria" style="display:none;">
+    <div class="sim-title">Independência financeira</div>
+    <p class="sim-intro">O ponto em que seus investimentos geram renda suficiente pra você não depender mais do trabalho.</p>
+    <div class="field">
+      <div class="field-label">Que renda mensal você quer ter?</div>
+      <div class="input-wrap"><span class="input-prefix">R$</span><input type="number" id="a-renda" class="has-prefix" value="5000" oninput="calcAposentadoria()"></div>
+    </div>
+    <div class="field">
+      <div class="field-label">Quanto você já tem investido?</div>
+      <div class="input-wrap"><span class="input-prefix">R$</span><input type="number" id="a-tem" class="has-prefix" value="20000" oninput="calcAposentadoria()"></div>
+    </div>
+    <div class="field">
+      <div class="field-label">Em quantos anos quer chegar lá?</div>
+      <div class="input-wrap"><input type="number" id="a-anos" class="has-suffix" value="20" oninput="calcAposentadoria()"><span class="input-suffix">anos</span></div>
+    </div>
+    <div class="field">
+      <div class="field-label">Rendimento ao ano <span class="field-hint">padrão: 10%</span></div>
+      <div class="input-wrap"><input type="number" id="a-taxa" class="has-suffix" value="10" step="0.5" oninput="calcAposentadoria()"><span class="input-suffix">% a.a.</span></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-canvas-wrap"><canvas id="chart-aposentadoria"></canvas></div>
+      <div class="chart-legend">
+        <div class="legend-item"><span class="legend-dot" style="background:#C9A875;"></span> Patrimônio acumulado</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#A0522D;"></span> Alvo</div>
+      </div>
+    </div>
+    <div class="sim-result" id="a-result"></div>
+    <p class="rate-note">Usa a regra dos 4%: o patrimônio que, rendendo, permite retirar a renda desejada sem acabar. Estimativa, não promessa.</p>
+  </div>
+
+  <div class="sim-cta">
+    <div class="sim-cta-title">Os números te surpreenderam?</div>
+    <div class="sim-cta-text">Esses simuladores dão a direção. O plano pra chegar lá a gente monta junto. Me chama.</div>
+    <a href="https://wa.me/5511981940543" class="wa-btn" rel="noopener noreferrer">
+      <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
+      Conversar no WhatsApp
+    </a>
+  </div>
+
+  <div class="foot">
+    <div class="foot-brand">Rakan · Vida Única</div>
+    <div class="foot-tag">Viva bem hoje sem comprometer o amanhã.</div>
+  </div>
+
+</div>
+
+<script>
+function fmt(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }); }
+function fmtMes(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+function fmtShort(v) {
+  if (v >= 1000000) return 'R$' + (v/1000000).toFixed(1).replace('.', ',') + 'mi';
+  if (v >= 1000) return 'R$' + (v/1000).toFixed(0) + 'mil';
+  return 'R$' + v.toFixed(0);
+}
+
+// Config comum de fonte/grid pros gráficos
+const GRID = 'rgba(42,37,32,0.08)';
+const TICK = '#8B7E70';
+Chart.defaults.font.family = 'Inter, sans-serif';
+Chart.defaults.font.size = 10;
+
+let charts = {};
+
+// Plugin: escreve o percentual no centro do donut da reserva
+const centerTextPlugin = {
+  id: 'centerText',
+  afterDraw(chart) {
+    if (chart.config.options.plugins.centerText && chart.config.options.plugins.centerText.display) {
+      const { ctx } = chart;
+      const meta = chart.getDatasetMeta(0);
+      if (!meta.data[0]) return;
+      const x = meta.data[0].x;
+      const y = meta.data[0].y;
+      const pct = chart.config.options.plugins.centerText.text;
+      ctx.save();
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#2A2520';
+      ctx.font = "600 28px Fraunces, serif";
+      ctx.fillText(pct, x, y - 6);
+      ctx.fillStyle = '#8B7E70';
+      ctx.font = "500 11px Inter, sans-serif";
+      ctx.fillText('da meta', x, y + 16);
+      ctx.restore();
+    }
+  }
+};
+Chart.register(centerTextPlugin);
+
+function selectSim(sim) {
+  document.querySelectorAll('.sel-btn').forEach(b => b.classList.toggle('active', b.dataset.sim === sim));
+  document.querySelectorAll('.sim-panel').forEach(p => p.style.display = 'none');
+  document.getElementById('panel-' + sim).style.display = 'block';
+  // Recalcula pra o gráfico renderizar com tamanho correto ao aparecer
+  if (sim === 'reserva') calcReserva();
+  if (sim === 'juros') calcJuros();
+  if (sim === 'objetivo') calcObjetivo();
+  if (sim === 'aposentadoria') calcAposentadoria();
+}
+
+// ===== RESERVA: barra de progresso (donut) =====
+function calcReserva() {
+  const gasto = +document.getElementById('r-gasto').value || 0;
+  const guardado = +document.getElementById('r-guardado').value || 0;
+  const meses = +document.getElementById('r-meses').value || 6;
+  const meta = gasto * meses;
+  const mesesCobertos = gasto > 0 ? guardado / gasto : 0;
+  const falta = Math.max(0, meta - guardado);
+  const temNaMeta = Math.min(guardado, meta);
+
+  let html = '';
+  if (guardado >= meta && meta > 0) {
+    html = '<div class="sim-result-label">Sua reserva está completa</div><div class="sim-result-value">' + mesesCobertos.toFixed(1).replace('.', ',') + ' meses</div><div class="sim-result-detail">Você já tem o suficiente pra cobrir <strong>' + meses + ' meses</strong>. Base protegida. Próximo passo: fazer esse dinheiro render.</div>';
+  } else {
+    html = '<div class="sim-result-label">Hoje você está coberto por</div><div class="sim-result-value">' + mesesCobertos.toFixed(1).replace('.', ',') + ' meses</div><div class="sim-result-detail">Pra chegar em <strong>' + meses + ' meses</strong> (' + fmt(meta) + '), faltam <strong>' + fmt(falta) + '</strong>.</div>';
+  }
+  document.getElementById('r-result').innerHTML = html;
+
+  const data = [temNaMeta, falta];
+  const pct = meta > 0 ? Math.min(100, Math.round((guardado / meta) * 100)) : 0;
+  const pctText = pct + '%';
+  if (charts.reserva) {
+    charts.reserva.data.datasets[0].data = data;
+    charts.reserva.options.plugins.centerText.text = pctText;
+    charts.reserva.update();
+  } else {
+    charts.reserva = new Chart(document.getElementById('chart-reserva'), {
+      type: 'doughnut',
+      data: { labels: ['Você já tem', 'Falta'], datasets: [{ data: data, backgroundColor: ['#6B7F4A', 'rgba(160,82,45,0.22)'], borderWidth: 0 }] },
+      options: { cutout: '70%', plugins: { legend: { display: false }, centerText: { display: true, text: pctText }, tooltip: { callbacks: { label: c => c.label + ': ' + fmt(c.raw) } } }, responsive: true, maintainAspectRatio: false }
+    });
+  }
+}
+
+// ===== JUROS: área empilhada (aportado vs juros) =====
+function calcJuros() {
+  const inicial = +document.getElementById('j-inicial').value || 0;
+  const aporte = +document.getElementById('j-aporte').value || 0;
+  const anos = +document.getElementById('j-anos').value || 0;
+  const taxaAA = +document.getElementById('j-taxa').value || 0;
+  const i = Math.pow(1 + taxaAA / 100, 1 / 12) - 1;
+
+  const labels = [], aportadoArr = [], jurosArr = [];
+  for (let ano = 0; ano <= anos; ano++) {
+    const n = ano * 12;
+    let montante = inicial * Math.pow(1 + i, n);
+    if (i > 0) montante += aporte * ((Math.pow(1 + i, n) - 1) / i);
+    else montante += aporte * n;
+    const investido = inicial + aporte * n;
+    labels.push(ano === 0 ? 'Hoje' : ano + 'a');
+    aportadoArr.push(Math.round(investido));
+    jurosArr.push(Math.round(Math.max(0, montante - investido)));
+  }
+  const nTotal = anos * 12;
+  let montanteFinal = inicial * Math.pow(1 + i, nTotal);
+  if (i > 0) montanteFinal += aporte * ((Math.pow(1 + i, nTotal) - 1) / i);
+  else montanteFinal += aporte * nTotal;
+  const investidoFinal = inicial + aporte * nTotal;
+  const jurosFinal = montanteFinal - investidoFinal;
+
+  document.getElementById('j-result').innerHTML = '<div class="sim-result-label">Em ' + anos + ' anos você teria</div><div class="sim-result-value">' + fmt(montanteFinal) + '</div><div class="sim-result-detail">Você colocou <strong>' + fmt(investidoFinal) + '</strong>. Os juros trabalharam <strong>' + fmt(jurosFinal) + '</strong> pra você.</div>';
+
+  if (charts.juros) {
+    charts.juros.data.labels = labels;
+    charts.juros.data.datasets[0].data = aportadoArr;
+    charts.juros.data.datasets[1].data = jurosArr;
+    charts.juros.update();
+  } else {
+    charts.juros = new Chart(document.getElementById('chart-juros'), {
+      type: 'line',
+      data: { labels: labels, datasets: [
+        { label: 'Aportado', data: aportadoArr, backgroundColor: 'rgba(139,126,112,0.35)', borderColor: '#8B7E70', borderWidth: 1.5, fill: true, tension: 0.3, pointRadius: 0 },
+        { label: 'Juros', data: jurosArr, backgroundColor: 'rgba(201,168,117,0.45)', borderColor: '#C9A875', borderWidth: 1.5, fill: true, tension: 0.3, pointRadius: 0 }
+      ]},
+      options: { responsive: true, maintainAspectRatio: false, interaction: { intersect: false, mode: 'index' },
+        scales: { x: { stacked: true, grid: { display: false }, ticks: { color: TICK } }, y: { stacked: true, grid: { color: GRID }, ticks: { color: TICK, callback: v => fmtShort(v) } } },
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.dataset.label + ': ' + fmt(c.raw) } } } }
+    });
+  }
+}
+
+// ===== OBJETIVO: linha de crescimento até a meta =====
+function calcObjetivo() {
+  const valor = +document.getElementById('o-valor').value || 0;
+  const tem = +document.getElementById('o-tem').value || 0;
+  const meses = +document.getElementById('o-meses').value || 1;
+  const taxaAA = +document.getElementById('o-taxa').value || 0;
+  const i = Math.pow(1 + taxaAA / 100, 1 / 12) - 1;
+  const futuroDoQueTem = tem * Math.pow(1 + i, meses);
+  const falta = Math.max(0, valor - futuroDoQueTem);
+  let aporte;
+  if (i > 0) aporte = falta * i / (Math.pow(1 + i, meses) - 1);
+  else aporte = falta / meses;
+
+  let html;
+  if (falta <= 0) {
+    html = '<div class="sim-result-label">Boa notícia</div><div class="sim-result-value">Você já chega lá</div><div class="sim-result-detail">Só com o que já tem rendendo, você alcança <strong>' + fmt(valor) + '</strong> no prazo. Não precisa guardar mais.</div>';
+  } else {
+    html = '<div class="sim-result-label">Você precisa guardar por mês</div><div class="sim-result-value">' + fmtMes(aporte) + '</div><div class="sim-result-detail">Pra chegar em <strong>' + fmt(valor) + '</strong> em <strong>' + meses + ' meses</strong>, contando o rendimento no caminho.</div>';
+  }
+  document.getElementById('o-result').innerHTML = html;
+
+  // curva de acúmulo
+  const step = Math.max(1, Math.round(meses / 12));
+  const labels = [], acumulado = [], metaLine = [];
+  let saldo = tem;
+  for (let m = 0; m <= meses; m++) {
+    if (m % step === 0 || m === meses) { labels.push(m === 0 ? 'Hoje' : m + 'm'); acumulado.push(Math.round(saldo)); metaLine.push(valor); }
+    saldo = saldo * (1 + i) + (falta > 0 ? aporte : 0);
+  }
+  if (charts.objetivo) {
+    charts.objetivo.data.labels = labels;
+    charts.objetivo.data.datasets[0].data = acumulado;
+    charts.objetivo.data.datasets[1].data = metaLine;
+    charts.objetivo.update();
+  } else {
+    charts.objetivo = new Chart(document.getElementById('chart-objetivo'), {
+      type: 'line',
+      data: { labels: labels, datasets: [
+        { label: 'Acumulado', data: acumulado, backgroundColor: 'rgba(201,168,117,0.3)', borderColor: '#C9A875', borderWidth: 2, fill: true, tension: 0.3, pointRadius: 0 },
+        { label: 'Meta', data: metaLine, borderColor: '#A0522D', borderWidth: 1.5, borderDash: [5,4], fill: false, pointRadius: 0 }
+      ]},
+      options: { responsive: true, maintainAspectRatio: false, interaction: { intersect: false, mode: 'index' },
+        scales: { x: { grid: { display: false }, ticks: { color: TICK } }, y: { grid: { color: GRID }, ticks: { color: TICK, callback: v => fmtShort(v) } } },
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.dataset.label + ': ' + fmt(c.raw) } } } }
+    });
+  }
+}
+
+// ===== APOSENTADORIA: acúmulo de patrimônio até o alvo =====
+function calcAposentadoria() {
+  const renda = +document.getElementById('a-renda').value || 0;
+  const tem = +document.getElementById('a-tem').value || 0;
+  const anos = +document.getElementById('a-anos').value || 1;
+  const taxaAA = +document.getElementById('a-taxa').value || 0;
+  const alvo = (renda * 12) / 0.04;
+  const i = Math.pow(1 + taxaAA / 100, 1 / 12) - 1;
+  const n = anos * 12;
+  const futuroDoQueTem = tem * Math.pow(1 + i, n);
+  const falta = Math.max(0, alvo - futuroDoQueTem);
+  let aporte;
+  if (i > 0) aporte = falta * i / (Math.pow(1 + i, n) - 1);
+  else aporte = falta / n;
+
+  let html;
+  if (falta <= 0) {
+    html = '<div class="sim-result-label">Você já está no caminho</div><div class="sim-result-value">' + fmt(alvo) + '</div><div class="sim-result-detail">É o patrimônio que gera <strong>' + fmt(renda) + '/mês</strong>. Só com o que já tem rendendo, você chega lá no prazo.</div>';
+  } else {
+    html = '<div class="sim-result-label">Pra ter ' + fmt(renda) + '/mês sem trabalhar</div><div class="sim-result-value">' + fmt(alvo) + '</div><div class="sim-result-detail">É o patrimônio necessário. Pra chegar lá em ' + anos + ' anos, guarde <strong>' + fmtMes(aporte) + '/mês</strong>.</div>';
+  }
+  document.getElementById('a-result').innerHTML = html;
+
+  const labels = [], acumulado = [], alvoLine = [];
+  let saldo = tem;
+  for (let ano = 0; ano <= anos; ano++) {
+    labels.push(ano === 0 ? 'Hoje' : ano + 'a');
+    acumulado.push(Math.round(saldo));
+    alvoLine.push(Math.round(alvo));
+    for (let m = 0; m < 12; m++) saldo = saldo * (1 + i) + (falta > 0 ? aporte : 0);
+  }
+  if (charts.aposentadoria) {
+    charts.aposentadoria.data.labels = labels;
+    charts.aposentadoria.data.datasets[0].data = acumulado;
+    charts.aposentadoria.data.datasets[1].data = alvoLine;
+    charts.aposentadoria.update();
+  } else {
+    charts.aposentadoria = new Chart(document.getElementById('chart-aposentadoria'), {
+      type: 'line',
+      data: { labels: labels, datasets: [
+        { label: 'Patrimônio', data: acumulado, backgroundColor: 'rgba(201,168,117,0.3)', borderColor: '#C9A875', borderWidth: 2, fill: true, tension: 0.3, pointRadius: 0 },
+        { label: 'Alvo', data: alvoLine, borderColor: '#A0522D', borderWidth: 1.5, borderDash: [5,4], fill: false, pointRadius: 0 }
+      ]},
+      options: { responsive: true, maintainAspectRatio: false, interaction: { intersect: false, mode: 'index' },
+        scales: { x: { grid: { display: false }, ticks: { color: TICK } }, y: { grid: { color: GRID }, ticks: { color: TICK, callback: v => fmtShort(v) } } },
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.dataset.label + ': ' + fmt(c.raw) } } } }
+    });
+  }
+}
+
+calcReserva();
+</script>
+
+</body>
+</html>
