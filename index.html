@@ -107,18 +107,9 @@ body {
   margin-bottom: 16px; box-shadow: 0 14px 38px rgba(0,0,0,0.38);
   text-decoration: none; display: block;
 }
-.card-hero-img {
-  height: 96px;
-  background:
-    radial-gradient(ellipse at 30% 30%, rgba(201,168,117,0.5) 0%, transparent 60%),
-    linear-gradient(135deg, var(--caramel) 0%, var(--terracotta) 100%);
-  display: flex; align-items: center; justify-content: center;
-  color: rgba(255,255,255,0.55); font-size: 11px; letter-spacing: 0.05em;
-}
-.card-hero-body { padding: 18px 22px; }
+.card-hero-body { padding: 20px 22px; text-align: center; }
 .card-hero-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-.card-hero-title { font-family: 'Fraunces', serif; font-size: 19px; font-weight: 600; color: var(--ink); margin-bottom: 4px; letter-spacing: -0.3px; }
-.card-hero-desc { font-size: 13px; color: var(--body); line-height: 1.5; }
+.card-hero-title { font-family: 'Fraunces', serif; font-size: 19px; font-weight: 600; color: var(--ink); letter-spacing: -0.3px; }
 .card-hero .arrow { color: var(--terracotta); font-size: 20px; flex-shrink: 0; margin-left: 16px; }
 
 /* Card WhatsApp */
@@ -170,8 +161,7 @@ body {
 <div class="container">
 
   <div class="head">
-    <!-- Avatar: trocar o "AN" por <img src="foto.jpg" alt="Arthur Notaroberto"> quando houver a foto -->
-    <div class="avatar">AN</div>
+    <div class="avatar"><img src="foto.jpg" alt="Arthur Notaroberto"></div>
     <div class="name">Arthur Notaroberto</div>
     <div class="tagline">Consultor financeiro, cuidando do seu amanhã.</div>
   </div>
@@ -192,13 +182,10 @@ body {
     -->
   </div>
 
-  <!-- 1. Planejamento - bloco de apresentação (não clicável, sem seta) -->
+  <!-- 1. Consultoria - bloco de apresentação (não clicável, sem seta) -->
   <div class="card-hero">
-    <!-- Imagem: trocar o placeholder por <img> da imagem real do planejamento -->
-    <div class="card-hero-img">[ imagem do planejamento ]</div>
     <div class="card-hero-body">
-      <div class="card-hero-title">Planejamento Financeiro</div>
-      <div class="card-hero-desc">Te conheço, entendo suas necessidades e sonhos, e agimos.</div>
+      <div class="card-hero-title">1:1 Consultoria Financeira</div>
     </div>
   </div>
 
