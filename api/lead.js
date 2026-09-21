@@ -42,10 +42,29 @@ function esc(s) {
 
 const isEmail = (e) => typeof e === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.trim());
 
+// Formata número em Real. dec = casas decimais (0 por padrão; 2 para aportes mensais).
+function brl(v, dec) {
+  const n = Number(v);
+  const casas = dec || 0;
+  if (!isFinite(n)) return 'R$ 0';
+  return n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: casas, maximumFractionDigits: casas });
+}
+function num(v) { const n = Number(v); return isFinite(n) ? n : 0; }
+
+// Rótulos amigáveis dos simuladores
+const SIM_LABELS = {
+  objetivo: 'Conquista de objetivos',
+  independencia: 'Independência financeira',
+  aposentadoria: 'Independência financeira', // compat: alias antigo
+  reserva: 'Reserva de emergência',
+  juros: 'Juros compostos'
+};
+
 // ===== Encaminha o lead para o Funil do app principal (opcional/configurável) =====
 // Só dispara se APP_LEAD_INTAKE_URL e APP_LEAD_INTAKE_TOKEN existirem. Nunca lança:
 // e-mail é o caminho principal; falha aqui não pode quebrar o envio nem a resposta.
-async function forwardToApp({ nome, email, whatsapp, etapa, respostas }) {
+// Recebe o payload já pronto (deve incluir `source`); envia como está.
+async function forwardToApp(payload) {
   const url = process.env.APP_LEAD_INTAKE_URL;
   const token = process.env.APP_LEAD_INTAKE_TOKEN;
   if (!url || !token) return; // endpoint ainda não existe/configurado -> pula em silêncio
@@ -58,7 +77,7 @@ async function forwardToApp({ nome, email, whatsapp, etapa, respostas }) {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + token
       },
-      body: JSON.stringify({ nome, email, whatsapp, etapa, respostas, source: 'checklist' }),
+      body: JSON.stringify(payload),
       signal: ctrl.signal
     });
     clearTimeout(t);
@@ -143,6 +162,197 @@ function buildArthurHtml({ nome, email, whatsapp, etapa, respostas }) {
 </body></html>`;
 }
 
+// ===== Conteúdo do mini plano por simulador (linguagem plana, sem slogan) =====
+// Recebe os inputs (dados) e os números calculados (resultado) vindos do cliente.
+function simuladorConteudo(simulador, dados, resultado, objetivoTipo) {
+  dados = dados || {};
+  resultado = resultado || {};
+  objetivoTipo = (objetivoTipo || '').toString().trim();
+  const d = (k) => num(dados[k]);
+  const r = (k) => num(resultado[k]);
+  let headline = '', passos = [], resumo = [];
+
+  // "independencia" (novo) e "aposentadoria" (alias antigo) usam o mesmo cálculo/plano
+  const isIndep = (simulador === 'aposentadoria' || simulador === 'independencia');
+
+  if (simulador === 'objetivo') {
+    // Personaliza pelo objetivo escolhido, quando informado ("a viagem", "o intercâmbio"...)
+    const alvo = objetivoTipo || 'o seu objetivo';
+    resumo = [
+      ['Objetivo', brl(d('valor'))],
+      ['Prazo', d('meses') + ' meses'],
+      ['Já tem pra ele', brl(d('tem'))],
+      ['Rendimento considerado', d('taxaAA') + '% a.a.']
+    ];
+    if (resultado.atingido) {
+      headline = 'Seu plano pra ' + alvo + ': só com o que você já tem rendendo, você alcança ' + brl(d('valor')) + ' no prazo. Não precisa guardar mais.';
+      passos = [
+        'Mantenha o dinheiro rendendo onde está e não mexa antes da hora.',
+        'Revise daqui a alguns meses pra confirmar que segue no rumo.'
+      ];
+    } else {
+      headline = 'Seu plano pra ' + alvo + ': guarde ' + brl(r('aporteMensal'), 2) + ' por mês pra juntar ' + brl(d('valor')) + ' em ' + d('meses') + ' meses.';
+      resumo.push(['Guardar por mês', brl(r('aporteMensal'), 2)]);
+      passos = [
+        'Abra uma conta de investimento numa corretora, se ainda não tem. Leva poucos minutos e não custa nada.',
+        'Automatize um aporte de ' + brl(r('aporteMensal'), 2) + ' todo mês, logo depois de receber — antes de gastar.',
+        'Pra prazo curto (até ~2 anos), deixe em algo seguro e de resgate rápido, como Tesouro Selic ou CDB de liquidez diária.'
+      ];
+    }
+  } else if (isIndep) {
+    resumo = [
+      ['Renda desejada', brl(d('renda')) + '/mês'],
+      ['Patrimônio-alvo', brl(r('patrimonioAlvo'))],
+      ['Prazo', d('anos') + ' anos'],
+      ['Já investido', brl(d('tem'))],
+      ['Rendimento considerado', d('taxaAA') + '% a.a.']
+    ];
+    if (resultado.atingido) {
+      headline = 'Só com o que você já tem investido rendendo, você chega ao patrimônio de ' + brl(r('patrimonioAlvo')) + ' — que gera cerca de ' + brl(d('renda')) + '/mês — dentro do prazo.';
+      passos = [
+        'Mantenha os aportes e o dinheiro rendendo; não interrompa sem necessidade.',
+        'Diversifique conforme o patrimônio cresce (renda fixa, ações, fundos imobiliários e internacional).',
+        'Revise uma vez por ano — objetivos e cenário mudam.'
+      ];
+    } else {
+      headline = 'Pra ter ' + brl(d('renda')) + '/mês sem depender do trabalho, você precisa de ' + brl(r('patrimonioAlvo')) + ' de patrimônio. Guardando ' + brl(r('aporteMensal'), 2) + ' por mês por ' + d('anos') + ' anos, você chega lá.';
+      resumo.push(['Guardar por mês', brl(r('aporteMensal'), 2)]);
+      passos = [
+        'Coloque o aporte de ' + brl(r('aporteMensal'), 2) + ' como prioridade no orçamento, não como a sobra do mês.',
+        'Automatize esse aporte pra ele acontecer sozinho, todo mês.',
+        'Diversifique conforme o valor cresce: renda fixa, ações, fundos imobiliários e um pedaço internacional.',
+        'Revise uma vez por ano e ajuste o aporte se a sua renda mudar.'
+      ];
+    }
+  } else if (simulador === 'reserva') {
+    const cobertoStr = num(resultado.mesesCobertos).toLocaleString('pt-BR', { maximumFractionDigits: 1 });
+    resumo = [
+      ['Gasto mensal', brl(d('gasto'))],
+      ['Meta (' + d('meses') + ' meses)', brl(r('meta'))],
+      ['Já guardado', brl(d('guardado'))],
+      ['Coberto hoje', cobertoStr + ' meses']
+    ];
+    if (resultado.completa) {
+      headline = 'Sua reserva já cobre ' + cobertoStr + ' meses — está completa. Próximo passo: fazer esse dinheiro render.';
+      passos = [
+        'Deixe a reserva numa conta separada, segura e de resgate imediato (Tesouro Selic ou CDB de liquidez diária).',
+        'Com a base protegida, comece a investir o excedente pensando em objetivos de médio e longo prazo.'
+      ];
+    } else {
+      headline = 'Hoje você está coberto por ' + cobertoStr + ' meses. Pra chegar em ' + d('meses') + ' meses (' + brl(r('meta')) + '), faltam ' + brl(r('falta')) + '.';
+      resumo.push(['Falta guardar', brl(r('falta'))]);
+      passos = [
+        'Abra uma conta separada só pra reserva — não misture com o dinheiro do dia a dia.',
+        'Deixe em algo seguro e de resgate imediato: Tesouro Selic ou CDB de liquidez diária.',
+        'Guarde um valor fixo todo mês até fechar os ' + brl(r('falta')) + ' que faltam.'
+      ];
+    }
+  } else { // juros
+    resumo = [
+      ['Valor inicial', brl(d('inicial'))],
+      ['Aporte mensal', brl(d('aporte'), 2)],
+      ['Prazo', d('anos') + ' anos'],
+      ['Rendimento considerado', d('taxaAA') + '% a.a.'],
+      ['Total no fim', brl(r('valorFinal'))],
+      ['Sendo de juros', brl(r('juros'))]
+    ];
+    headline = 'Em ' + d('anos') + ' anos você teria ' + brl(r('valorFinal')) + '. Você colocou ' + brl(r('aportado')) + '; os juros trabalharam ' + brl(r('juros')) + ' pra você.';
+    passos = [
+      'Comece agora, mesmo que com pouco — o que faz os juros crescerem é o tempo.',
+      'Automatize o aporte de ' + brl(d('aporte'), 2) + ' por mês pra ele não depender de disciplina.',
+      'Adiar alguns anos custa caro no final: quanto mais cedo, mais forte o efeito.'
+    ];
+  }
+  return { headline, passos, resumo };
+}
+
+// ===== E-mail HTML para o LEAD (mini plano personalizado, estilo café com leite) =====
+function buildSimuladorLeadHtml({ nome, simulador, dados, resultado, objetivoTipo }) {
+  const { headline, passos, resumo } = simuladorConteudo(simulador, dados, resultado, objetivoTipo);
+  const label = SIM_LABELS[simulador] || 'Simulador';
+
+  const passosHtml = passos.map((p, idx) => `
+    <div style="margin-bottom:9px;">
+      <table role="presentation" style="border-collapse:collapse;"><tr>
+        <td style="vertical-align:top;padding-right:12px;">
+          <div style="width:24px;height:24px;border-radius:50%;background:#A0522D;color:#FFFFFF;font-size:13px;font-weight:700;text-align:center;line-height:24px;">${idx + 1}</div>
+        </td>
+        <td style="font-size:13px;color:#5A5249;line-height:1.5;">${esc(p)}</td>
+      </tr></table>
+    </div>`).join('');
+
+  const resumoHtml = (resumo || []).map(([k, v]) => `
+    <tr>
+      <td style="padding:7px 0;border-bottom:1px solid #EFE7DA;font-size:13px;color:#5A5249;">${esc(k)}</td>
+      <td style="padding:7px 0;border-bottom:1px solid #EFE7DA;font-size:13px;font-weight:700;color:#2A2520;text-align:right;">${esc(v)}</td>
+    </tr>`).join('');
+
+  return `<!DOCTYPE html>
+<html lang="pt-br"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#1B1713;font-family:Arial,Helvetica,sans-serif;">
+  <div style="max-width:560px;margin:0 auto;padding:28px 18px;">
+    <div style="text-align:center;margin-bottom:22px;">
+      <div style="font-size:12px;color:#C9A875;letter-spacing:0.16em;text-transform:uppercase;font-weight:600;margin-bottom:8px;">Seu plano · ${esc(label)}</div>
+      <div style="font-family:Georgia,'Times New Roman',serif;font-size:26px;font-weight:600;color:#F5EFE6;">Olá, ${esc(nome || 'tudo bem')}!</div>
+    </div>
+
+    <div style="background:#FAF6EE;border-radius:18px;padding:24px 22px;">
+      <div style="text-align:center;background:linear-gradient(135deg,#C9A875,#A0522D);border-radius:14px;padding:18px;margin-bottom:22px;">
+        <div style="font-size:15px;font-weight:600;color:#FFFFFF;line-height:1.45;">${esc(headline)}</div>
+      </div>
+
+      <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.1em;font-weight:700;color:#8B7E70;margin-bottom:10px;">Seus números</div>
+      <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">${resumoHtml}</table>
+
+      <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.1em;font-weight:700;color:#A0522D;margin-bottom:12px;">&rarr; Próximos passos</div>
+      ${passosHtml}
+
+      <div style="text-align:center;margin-top:26px;">
+        <a href="${WHATSAPP_URL}" style="display:inline-block;background:#C9A875;color:#2A2520;text-decoration:none;font-weight:700;font-size:15px;padding:14px 30px;border-radius:100px;">Falar com o Arthur no WhatsApp</a>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:16px;">
+      <div style="font-size:11px;color:#8B7E70;line-height:1.5;">Os números vêm da sua simulação e usam uma estimativa de rendimento, não uma promessa. O resultado real depende de onde você investe e do cenário.</div>
+    </div>
+
+    <div style="text-align:center;margin-top:20px;">
+      <div style="font-family:Georgia,'Times New Roman',serif;font-size:15px;color:#F5EFE6;margin-bottom:4px;">Arthur Notaroberto · Rakan | Vida Única</div>
+      <div style="font-size:11px;color:#8B7E70;">Viva bem hoje sem comprometer o amanhã.</div>
+    </div>
+  </div>
+</body></html>`;
+}
+
+// ===== E-mail para o ARTHUR (notificação de novo lead do simulador) =====
+function buildSimuladorArthurHtml({ nome, email, whatsapp, simulador, dados, resultado, objetivoTipo }) {
+  const label = SIM_LABELS[simulador] || simulador;
+  const { headline, resumo } = simuladorConteudo(simulador, dados, resultado, objetivoTipo);
+  const linhas = (resumo || []).map(([k, v]) => `
+    <tr>
+      <td style="padding:6px 10px;border-bottom:1px solid #eee;font-size:13px;color:#2A2520;">${esc(k)}</td>
+      <td style="padding:6px 10px;border-bottom:1px solid #eee;font-size:13px;font-weight:700;color:#2A2520;">${esc(v)}</td>
+    </tr>`).join('');
+
+  return `<!DOCTYPE html>
+<html lang="pt-br"><head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:20px;background:#f4f4f4;font-family:Arial,Helvetica,sans-serif;color:#2A2520;">
+  <div style="max-width:600px;margin:0 auto;background:#fff;border-radius:12px;padding:24px;">
+    <h2 style="font-family:Georgia,serif;color:#A0522D;margin:0 0 16px;">Novo lead (simulador)</h2>
+    <table style="width:100%;border-collapse:collapse;margin-bottom:20px;">
+      <tr><td style="padding:6px 0;font-size:14px;"><strong>Nome:</strong></td><td style="padding:6px 0;font-size:14px;">${esc(nome)}</td></tr>
+      <tr><td style="padding:6px 0;font-size:14px;"><strong>E-mail:</strong></td><td style="padding:6px 0;font-size:14px;"><a href="mailto:${esc(email)}">${esc(email)}</a></td></tr>
+      <tr><td style="padding:6px 0;font-size:14px;"><strong>WhatsApp:</strong></td><td style="padding:6px 0;font-size:14px;">${esc(whatsapp) || '—'}</td></tr>
+      <tr><td style="padding:6px 0;font-size:14px;"><strong>Simulador:</strong></td><td style="padding:6px 0;font-size:14px;"><strong>${esc(label)}</strong></td></tr>
+      ${objetivoTipo ? `<tr><td style="padding:6px 0;font-size:14px;"><strong>Objetivo:</strong></td><td style="padding:6px 0;font-size:14px;">${esc(objetivoTipo)}</td></tr>` : ''}
+    </table>
+    <p style="font-size:13px;color:#5A5249;line-height:1.5;margin:0 0 16px;">${esc(headline)}</p>
+    <h3 style="font-size:14px;color:#5A5249;margin:0 0 8px;">Números da simulação</h3>
+    <table style="width:100%;border-collapse:collapse;">${linhas}</table>
+  </div>
+</body></html>`;
+}
+
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     res.status(405).json({ ok: false, error: 'Método não permitido.' });
@@ -189,10 +399,8 @@ module.exports = async (req, res) => {
   const SMTP_HOST = process.env.SMTP_HOST || 'smtp.gmail.com';
   const SMTP_PORT = parseInt(process.env.SMTP_PORT || '587', 10);
 
-  const respostas = Array.isArray(body.respostas) ? body.respostas : [];
-  const ondeAgir = Array.isArray(body.ondeAgir) ? body.ondeAgir : [];
-  const jaFunciona = Array.isArray(body.jaFunciona) ? body.jaFunciona : [];
-  const etapa = (body.etapa || '').toString();
+  // Origem do lead: "simulador" ou "checklist" (default, mantém compatibilidade).
+  const source = body.source === 'simulador' ? 'simulador' : 'checklist';
 
   const from = `"Arthur Notaroberto" <${SMTP_USER}>`;
 
@@ -204,26 +412,64 @@ module.exports = async (req, res) => {
       auth: { user: SMTP_USER, pass: SMTP_PASS }
     });
 
-    // 1) E-mail para o LEAD (resultado)
-    await transporter.sendMail({
-      from,
-      to: email,
-      replyTo: ARTHUR_EMAIL,
-      subject: `Seu raio-x financeiro: etapa ${etapa}`,
-      html: buildLeadHtml({ nome, etapa, ondeAgir, jaFunciona })
-    });
+    if (source === 'simulador') {
+      // ===== Fluxo do SIMULADOR: mini plano de ação personalizado =====
+      const SIMS = ['objetivo', 'independencia', 'aposentadoria', 'reserva', 'juros'];
+      const simulador = SIMS.includes(body.simulador) ? body.simulador : 'objetivo';
+      const dados = (body.dados && typeof body.dados === 'object') ? body.dados : {};
+      const resultado = (body.resultado && typeof body.resultado === 'object') ? body.resultado : {};
+      const objetivoTipo = (body.objetivoTipo || '').toString().trim().slice(0, 80);
+      const label = SIM_LABELS[simulador] || 'Simulador';
 
-    // 2) E-mail para o ARTHUR (notificação)
-    await transporter.sendMail({
-      from,
-      to: ARTHUR_EMAIL,
-      replyTo: email,
-      subject: `Novo lead do raio-x: ${nome} (${etapa})`,
-      html: buildArthurHtml({ nome, email, whatsapp, etapa, respostas })
-    });
+      // 1) E-mail para o LEAD (mini plano)
+      await transporter.sendMail({
+        from,
+        to: email,
+        replyTo: ARTHUR_EMAIL,
+        subject: `Seu plano no simulador: ${label}`,
+        html: buildSimuladorLeadHtml({ nome, simulador, dados, resultado, objetivoTipo })
+      });
 
-    // Encaminha ao Funil do app (opcional; nunca quebra o fluxo do e-mail)
-    await forwardToApp({ nome, email, whatsapp, etapa, respostas });
+      // 2) E-mail para o ARTHUR (notificação)
+      await transporter.sendMail({
+        from,
+        to: ARTHUR_EMAIL,
+        replyTo: email,
+        subject: `Novo lead (simulador): ${nome} (${label})`,
+        html: buildSimuladorArthurHtml({ nome, email, whatsapp, simulador, dados, resultado, objetivoTipo })
+      });
+
+      // Encaminha ao Funil do app (opcional; nunca quebra o fluxo do e-mail)
+      await forwardToApp({ nome, email, whatsapp, source: 'simulador', simulador, objetivoTipo, dados, resultado });
+
+    } else {
+      // ===== Fluxo do CHECKLIST (raio-x) — comportamento original =====
+      const respostas = Array.isArray(body.respostas) ? body.respostas : [];
+      const ondeAgir = Array.isArray(body.ondeAgir) ? body.ondeAgir : [];
+      const jaFunciona = Array.isArray(body.jaFunciona) ? body.jaFunciona : [];
+      const etapa = (body.etapa || '').toString();
+
+      // 1) E-mail para o LEAD (resultado)
+      await transporter.sendMail({
+        from,
+        to: email,
+        replyTo: ARTHUR_EMAIL,
+        subject: `Seu raio-x financeiro: etapa ${etapa}`,
+        html: buildLeadHtml({ nome, etapa, ondeAgir, jaFunciona })
+      });
+
+      // 2) E-mail para o ARTHUR (notificação)
+      await transporter.sendMail({
+        from,
+        to: ARTHUR_EMAIL,
+        replyTo: email,
+        subject: `Novo lead do raio-x: ${nome} (${etapa})`,
+        html: buildArthurHtml({ nome, email, whatsapp, etapa, respostas })
+      });
+
+      // Encaminha ao Funil do app (opcional; nunca quebra o fluxo do e-mail)
+      await forwardToApp({ nome, email, whatsapp, etapa, respostas, source: 'checklist' });
+    }
 
     res.status(200).json({ ok: true });
   } catch (err) {

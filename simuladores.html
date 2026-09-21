@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Simuladores — Arthur Notaroberto</title>
-<meta name="description" content="Quatro simuladores financeiros: reserva de emergência, juros compostos, objetivo e independência. Mexa nos valores e veja o resultado na hora.">
+<meta name="description" content="Simuladores financeiros: reserva de emergência e conquista de objetivos (incluindo independência), mais juros compostos. Mexa nos valores e veja o resultado na hora.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://links.rakan-invest.com/simuladores">
 
@@ -12,13 +12,13 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://links.rakan-invest.com/simuladores">
 <meta property="og:title" content="Simuladores — Veja seus números antes de decidir">
-<meta property="og:description" content="Reserva, juros compostos, objetivo e independência financeira. Calcule na hora.">
+<meta property="og:description" content="Reserva de emergência e conquista de objetivos (incluindo independência), mais juros compostos. Calcule na hora.">
 <meta property="og:image" content="https://links.rakan-invest.com/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Simuladores — Veja seus números antes de decidir">
-<meta name="twitter:description" content="Reserva, juros compostos, objetivo e independência financeira. Calcule na hora.">
+<meta name="twitter:description" content="Reserva de emergência e conquista de objetivos (incluindo independência), mais juros compostos. Calcule na hora.">
 <meta name="twitter:image" content="https://links.rakan-invest.com/og-image.png">
 
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23A0522D'/></svg>">
@@ -83,6 +83,16 @@ body {
 .sel-btn-desc { font-size: 10.5px; color: var(--cream-soft); line-height: 1.3; }
 .sel-btn.active .sel-btn-desc { color: var(--body); }
 
+.more-btn {
+  display: block; width: 100%; margin: -14px 0 26px;
+  background: transparent; border: 1px dashed var(--border-cream); border-radius: 12px;
+  padding: 11px 14px; cursor: pointer; transition: all 0.15s;
+  font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 600;
+  color: var(--cream-soft); letter-spacing: 0.02em;
+}
+.more-btn:hover { border-color: var(--caramel); color: var(--caramel); }
+.more-btn:active { transform: scale(0.99); }
+
 .sim-panel { background: var(--cream-card); border-radius: 20px; padding: 24px 22px; box-shadow: 0 16px 44px rgba(0,0,0,0.4); margin-bottom: 18px; }
 .sim-title { font-family: 'Fraunces', serif; font-size: 21px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
 .sim-intro { font-size: 13px; color: var(--body); line-height: 1.5; margin-bottom: 22px; }
@@ -97,6 +107,24 @@ body {
 .field input.has-prefix { padding-left: 38px; }
 .field input.has-suffix { padding-right: 52px; }
 .field input:focus { border-color: var(--terracotta); }
+.field input[type="text"] { width: 100%; padding: 13px 14px; border: 1.5px solid rgba(201,168,117,0.35); border-radius: 11px; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600; color: var(--ink); background: #fff; outline: none; transition: border-color 0.15s; }
+.field input[type="text"]::placeholder { color: var(--neutral); font-weight: 400; }
+
+/* Lista suspensa do objetivo */
+.select-wrap { position: relative; }
+.select-wrap select {
+  width: 100%; padding: 13px 40px 13px 14px; border: 1.5px solid rgba(201,168,117,0.35);
+  border-radius: 11px; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600;
+  color: var(--ink); background: #fff; outline: none; cursor: pointer;
+  appearance: none; -webkit-appearance: none; -moz-appearance: none;
+  transition: border-color 0.15s;
+}
+.select-wrap select:focus { border-color: var(--terracotta); }
+.select-wrap::after {
+  content: ''; position: absolute; right: 16px; top: 50%; width: 8px; height: 8px;
+  border-right: 2px solid var(--neutral); border-bottom: 2px solid var(--neutral);
+  transform: translateY(-70%) rotate(45deg); pointer-events: none;
+}
 
 /* Gráfico */
 .chart-box { margin-top: 22px; background: #fff; border-radius: 14px; padding: 16px 12px 10px; border: 1px solid rgba(201,168,117,0.2); }
@@ -118,6 +146,65 @@ body {
 .wa-btn { display: inline-flex; align-items: center; gap: 10px; background: var(--terracotta); color: var(--cream); font-size: 14px; font-weight: 600; padding: 13px 26px; border-radius: 100px; text-decoration: none; }
 .wa-btn svg { width: 18px; height: 18px; fill: var(--cream); }
 
+/* ===== CAPTURA DE LEAD (mini plano por e-mail) ===== */
+.lead-capture {
+  background: var(--cream-card); border-radius: 18px; padding: 24px 22px;
+  margin-bottom: 18px; box-shadow: 0 12px 34px rgba(0,0,0,0.32);
+}
+.lead-title {
+  font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600;
+  color: var(--ink); line-height: 1.2; margin-bottom: 6px;
+}
+.lead-sub { font-size: 13.5px; color: var(--body); line-height: 1.5; margin-bottom: 20px; }
+.lead-field { margin-bottom: 14px; }
+.lead-field label {
+  display: block; font-size: 12px; font-weight: 600; color: var(--body);
+  text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px;
+}
+.lead-field input[type="text"],
+.lead-field input[type="email"],
+.lead-field input[type="tel"] {
+  width: 100%; font-family: 'Inter', sans-serif; font-size: 15px; color: var(--ink);
+  background: #fff; border: 1px solid var(--border-cream); border-radius: 12px;
+  padding: 13px 15px; transition: border-color 0.2s;
+}
+.lead-field input:focus { outline: none; border-color: var(--caramel); }
+.lead-field input::placeholder { color: var(--neutral); }
+.lead-consent {
+  display: flex; align-items: flex-start; gap: 10px;
+  margin: 4px 0 20px; cursor: pointer;
+}
+.lead-consent input[type="checkbox"] {
+  flex-shrink: 0; width: 18px; height: 18px; margin-top: 1px;
+  accent-color: var(--terracotta); cursor: pointer;
+}
+.lead-consent span { font-size: 12.5px; color: var(--body); line-height: 1.45; }
+/* honeypot anti-spam: escondido de humanos */
+.lead-hp {
+  position: absolute; left: -9999px; width: 1px; height: 1px;
+  overflow: hidden; opacity: 0;
+}
+.lead-submit {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600;
+  padding: 15px 24px; border-radius: 100px; border: none; cursor: pointer;
+  background: var(--caramel); color: var(--ink);
+  transition: transform 0.1s, opacity 0.2s;
+}
+.lead-submit:active { transform: scale(0.98); }
+.lead-submit:disabled { opacity: 0.6; cursor: default; }
+.lead-msg { font-size: 13px; line-height: 1.5; margin-top: 14px; text-align: center; }
+.lead-msg.ok { color: var(--green); }
+.lead-msg.err { color: var(--terracotta); }
+.lead-success { text-align: center; padding: 8px 0; }
+.lead-success .lead-success-icon {
+  width: 52px; height: 52px; border-radius: 50%; margin: 0 auto 14px;
+  background: var(--green); display: flex; align-items: center; justify-content: center;
+  color: var(--cream); font-size: 26px; font-weight: 700;
+}
+.lead-success-title { font-family: 'Fraunces', serif; font-size: 19px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+.lead-success-text { font-size: 13.5px; color: var(--body); line-height: 1.5; }
+
 .foot { text-align: center; margin-top: 28px; }
 .foot-brand { font-family: 'Fraunces', serif; font-size: 14px; color: var(--cream); margin-bottom: 4px; }
 .foot-tag { font-size: 11px; color: var(--neutral); font-style: italic; }
@@ -133,34 +220,31 @@ body {
   <div class="head">
     <div class="head-kicker">Simuladores</div>
     <h1 class="head-title">Veja seus números antes de decidir</h1>
-    <p class="head-sub">Quatro contas que ajudam a enxergar seu dinheiro com clareza. Mexa nos valores e veja o resultado na hora.</p>
+    <p class="head-sub">Dois simuladores principais pra enxergar seu dinheiro com clareza — reserva e conquista de objetivos — e juros compostos quando precisar. Mexa nos valores e veja o resultado na hora.</p>
   </div>
 
   <div class="selector">
-    <button class="sel-btn active" data-sim="reserva" onclick="selectSim('reserva')">
+    <button class="sel-btn" data-sim="reserva" onclick="selectSim('reserva')">
       <span class="sel-btn-icon">🛡️</span>
       <span class="sel-btn-title">Reserva de emergência</span>
       <span class="sel-btn-desc">Quantos meses você aguenta</span>
     </button>
-    <button class="sel-btn" data-sim="juros" onclick="selectSim('juros')">
+    <button class="sel-btn active" data-sim="objetivo" onclick="selectSim('objetivo')">
+      <span class="sel-btn-icon">🎯</span>
+      <span class="sel-btn-title">Conquista de objetivos</span>
+      <span class="sel-btn-desc">Quanto guardar por mês</span>
+    </button>
+    <button class="sel-btn sel-extra" data-sim="juros" onclick="selectSim('juros')" style="display:none;">
       <span class="sel-btn-icon">📈</span>
       <span class="sel-btn-title">Juros compostos</span>
       <span class="sel-btn-desc">Quanto seu dinheiro rende</span>
     </button>
-    <button class="sel-btn" data-sim="objetivo" onclick="selectSim('objetivo')">
-      <span class="sel-btn-icon">🎯</span>
-      <span class="sel-btn-title">Objetivo</span>
-      <span class="sel-btn-desc">Quanto guardar por mês</span>
-    </button>
-    <button class="sel-btn" data-sim="aposentadoria" onclick="selectSim('aposentadoria')">
-      <span class="sel-btn-icon">🌅</span>
-      <span class="sel-btn-title">Independência</span>
-      <span class="sel-btn-desc">Renda sem depender do trabalho</span>
-    </button>
   </div>
 
+  <button class="more-btn" id="moreBtn" onclick="toggleMore()">+ Mais simuladores</button>
+
   <!-- ===== RESERVA ===== -->
-  <div class="sim-panel" id="panel-reserva">
+  <div class="sim-panel" id="panel-reserva" style="display:none;">
     <div class="sim-title">Reserva de emergência</div>
     <p class="sim-intro">A base de tudo. Antes de investir, é o dinheiro que te protege de um imprevisto sem virar crise.</p>
     <div class="field">
@@ -216,66 +300,132 @@ body {
     <p class="rate-note">Rendimento é uma estimativa, não promessa. O resultado real depende de onde você investe e do cenário econômico.</p>
   </div>
 
-  <!-- ===== OBJETIVO ===== -->
-  <div class="sim-panel" id="panel-objetivo" style="display:none;">
-    <div class="sim-title">Quanto guardar pra um objetivo</div>
-    <p class="sim-intro">Casa, carro, viagem, intercâmbio. Coloque o valor e o prazo, e veja quanto isso pede por mês.</p>
+  <!-- ===== CONQUISTA DE OBJETIVOS (absorve a independência via lista suspensa) ===== -->
+  <div class="sim-panel" id="panel-objetivo">
+    <div class="sim-title">Conquista de objetivos</div>
+    <p class="sim-intro" id="o-intro">Escolha seu objetivo, coloque valor e prazo, e veja quanto isso pede por mês.</p>
+
+    <!-- Pergunta inicial: qual objetivo -->
     <div class="field">
-      <div class="field-label">Quanto custa o objetivo?</div>
-      <div class="input-wrap"><span class="input-prefix">R$</span><input type="number" id="o-valor" class="has-prefix" value="50000" oninput="calcObjetivo()"></div>
-    </div>
-    <div class="field">
-      <div class="field-label">Quanto você já tem pra ele?</div>
-      <div class="input-wrap"><span class="input-prefix">R$</span><input type="number" id="o-tem" class="has-prefix" value="0" oninput="calcObjetivo()"></div>
-    </div>
-    <div class="field">
-      <div class="field-label">Em quanto tempo?</div>
-      <div class="input-wrap"><input type="number" id="o-meses" class="has-suffix" value="24" oninput="calcObjetivo()"><span class="input-suffix">meses</span></div>
-    </div>
-    <div class="field">
-      <div class="field-label">Rendimento ao ano <span class="field-hint">padrão: 10%</span></div>
-      <div class="input-wrap"><input type="number" id="o-taxa" class="has-suffix" value="10" step="0.5" oninput="calcObjetivo()"><span class="input-suffix">% a.a.</span></div>
-    </div>
-    <div class="chart-box">
-      <div class="chart-canvas-wrap"><canvas id="chart-objetivo"></canvas></div>
-      <div class="chart-legend">
-        <div class="legend-item"><span class="legend-dot" style="background:#C9A875;"></span> Seu dinheiro crescendo</div>
-        <div class="legend-item"><span class="legend-dot" style="background:#A0522D;"></span> Meta</div>
+      <div class="field-label">Qual seu objetivo?</div>
+      <div class="select-wrap">
+        <select id="o-tipo" onchange="onObjetivoTipoChange()">
+          <option value="carro">Comprar/Trocar de carro</option>
+          <option value="viajar">Viajar</option>
+          <option value="intercambio">Intercâmbio</option>
+          <option value="casa">Compra/Troca de casa</option>
+          <option value="independencia">Aposentadoria / Independência</option>
+          <option value="dinheiro">Juntar um dinheiro</option>
+          <option value="empreender">Empreender</option>
+          <option value="outro">Outro objetivo (escrever)</option>
+        </select>
       </div>
     </div>
-    <div class="sim-result" id="o-result"></div>
-    <p class="rate-note">Rendimento é uma estimativa. Considera que o que você já guardou também rende no período.</p>
+
+    <!-- Campo livre: só aparece em "Outro objetivo" -->
+    <div class="field" id="o-nome-field" style="display:none;">
+      <div class="field-label">Qual é esse objetivo?</div>
+      <input type="text" id="o-nome" maxlength="60" placeholder="Ex.: montar um home office" oninput="calcObjetivo()">
+    </div>
+
+    <!-- ===== Campos do objetivo comum ===== -->
+    <div id="o-fields-padrao">
+      <div class="field">
+        <div class="field-label" id="o-valor-label">Quanto custa o objetivo?</div>
+        <div class="input-wrap"><span class="input-prefix">R$</span><input type="number" id="o-valor" class="has-prefix" value="50000" oninput="calcObjetivo()"></div>
+      </div>
+      <div class="field">
+        <div class="field-label">Quanto você já tem pra ele?</div>
+        <div class="input-wrap"><span class="input-prefix">R$</span><input type="number" id="o-tem" class="has-prefix" value="0" oninput="calcObjetivo()"></div>
+      </div>
+      <div class="field">
+        <div class="field-label">Em quanto tempo?</div>
+        <div class="input-wrap"><input type="number" id="o-meses" class="has-suffix" value="24" oninput="calcObjetivo()"><span class="input-suffix">meses</span></div>
+      </div>
+      <div class="field">
+        <div class="field-label">Rendimento ao ano <span class="field-hint">padrão: 10%</span></div>
+        <div class="input-wrap"><input type="number" id="o-taxa" class="has-suffix" value="10" step="0.5" oninput="calcObjetivo()"><span class="input-suffix">% a.a.</span></div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-canvas-wrap"><canvas id="chart-objetivo"></canvas></div>
+        <div class="chart-legend">
+          <div class="legend-item"><span class="legend-dot" style="background:#C9A875;"></span> Seu dinheiro crescendo</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#A0522D;"></span> Meta</div>
+        </div>
+      </div>
+      <div class="sim-result" id="o-result"></div>
+      <p class="rate-note">Rendimento é uma estimativa. Considera que o que você já guardou também rende no período.</p>
+    </div>
+
+    <!-- ===== Campos da independência (o painel morfa quando escolhe "Aposentadoria / Independência") ===== -->
+    <div id="o-fields-indep" style="display:none;">
+      <div class="field">
+        <div class="field-label">Que renda mensal você quer ter?</div>
+        <div class="input-wrap"><span class="input-prefix">R$</span><input type="number" id="a-renda" class="has-prefix" value="5000" oninput="calcAposentadoria()"></div>
+      </div>
+      <div class="field">
+        <div class="field-label">Quanto você já tem investido?</div>
+        <div class="input-wrap"><span class="input-prefix">R$</span><input type="number" id="a-tem" class="has-prefix" value="20000" oninput="calcAposentadoria()"></div>
+      </div>
+      <div class="field">
+        <div class="field-label">Em quantos anos quer chegar lá?</div>
+        <div class="input-wrap"><input type="number" id="a-anos" class="has-suffix" value="20" oninput="calcAposentadoria()"><span class="input-suffix">anos</span></div>
+      </div>
+      <div class="field">
+        <div class="field-label">Rendimento ao ano <span class="field-hint">padrão: 10%</span></div>
+        <div class="input-wrap"><input type="number" id="a-taxa" class="has-suffix" value="10" step="0.5" oninput="calcAposentadoria()"><span class="input-suffix">% a.a.</span></div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-canvas-wrap"><canvas id="chart-aposentadoria"></canvas></div>
+        <div class="chart-legend">
+          <div class="legend-item"><span class="legend-dot" style="background:#C9A875;"></span> Patrimônio acumulado</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#A0522D;"></span> Alvo</div>
+        </div>
+      </div>
+      <div class="sim-result" id="a-result"></div>
+      <p class="rate-note">Usa a regra dos 4%: o patrimônio que, rendendo, permite retirar a renda desejada sem acabar. Estimativa, não promessa.</p>
+    </div>
   </div>
 
-  <!-- ===== APOSENTADORIA ===== -->
-  <div class="sim-panel" id="panel-aposentadoria" style="display:none;">
-    <div class="sim-title">Independência financeira</div>
-    <p class="sim-intro">O ponto em que seus investimentos geram renda suficiente pra você não depender mais do trabalho.</p>
-    <div class="field">
-      <div class="field-label">Que renda mensal você quer ter?</div>
-      <div class="input-wrap"><span class="input-prefix">R$</span><input type="number" id="a-renda" class="has-prefix" value="5000" oninput="calcAposentadoria()"></div>
-    </div>
-    <div class="field">
-      <div class="field-label">Quanto você já tem investido?</div>
-      <div class="input-wrap"><span class="input-prefix">R$</span><input type="number" id="a-tem" class="has-prefix" value="20000" oninput="calcAposentadoria()"></div>
-    </div>
-    <div class="field">
-      <div class="field-label">Em quantos anos quer chegar lá?</div>
-      <div class="input-wrap"><input type="number" id="a-anos" class="has-suffix" value="20" oninput="calcAposentadoria()"><span class="input-suffix">anos</span></div>
-    </div>
-    <div class="field">
-      <div class="field-label">Rendimento ao ano <span class="field-hint">padrão: 10%</span></div>
-      <div class="input-wrap"><input type="number" id="a-taxa" class="has-suffix" value="10" step="0.5" oninput="calcAposentadoria()"><span class="input-suffix">% a.a.</span></div>
-    </div>
-    <div class="chart-box">
-      <div class="chart-canvas-wrap"><canvas id="chart-aposentadoria"></canvas></div>
-      <div class="chart-legend">
-        <div class="legend-item"><span class="legend-dot" style="background:#C9A875;"></span> Patrimônio acumulado</div>
-        <div class="legend-item"><span class="legend-dot" style="background:#A0522D;"></span> Alvo</div>
+  <!-- ===== CAPTURA DE LEAD (opcional; mini plano por e-mail do simulador ativo) ===== -->
+  <div class="lead-capture" id="leadCapture">
+    <div id="leadForm">
+      <div class="lead-title">Quer receber esse plano no e-mail?</div>
+      <div class="lead-sub">Mando os números que você simulou aqui e os próximos passos pra sair do papel.</div>
+
+      <div class="lead-field">
+        <label for="leadNome">Nome</label>
+        <input type="text" id="leadNome" name="nome" autocomplete="name" placeholder="Seu nome">
       </div>
+      <div class="lead-field">
+        <label for="leadEmail">E-mail</label>
+        <input type="email" id="leadEmail" name="email" autocomplete="email" placeholder="voce@email.com">
+      </div>
+      <div class="lead-field">
+        <label for="leadWhats">WhatsApp <span style="text-transform:none;font-weight:400;color:var(--neutral);">(opcional)</span></label>
+        <input type="tel" id="leadWhats" name="whatsapp" autocomplete="tel" placeholder="(11) 99999-9999">
+      </div>
+
+      <!-- honeypot anti-spam: humanos não veem, bots preenchem -->
+      <div class="lead-hp" aria-hidden="true">
+        <label for="leadWebsite">Não preencha este campo</label>
+        <input type="text" id="leadWebsite" name="website" tabindex="-1" autocomplete="off">
+      </div>
+
+      <label class="lead-consent">
+        <input type="checkbox" id="leadConsent">
+        <span>Aceito receber contato do Arthur sobre meu plano.</span>
+      </label>
+
+      <button class="lead-submit" id="leadSubmit" onclick="submitLead()">Receber meu plano</button>
+      <div class="lead-msg" id="leadMsg" style="display:none;"></div>
     </div>
-    <div class="sim-result" id="a-result"></div>
-    <p class="rate-note">Usa a regra dos 4%: o patrimônio que, rendendo, permite retirar a renda desejada sem acabar. Estimativa, não promessa.</p>
+
+    <div class="lead-success" id="leadSuccess" style="display:none;">
+      <div class="lead-success-icon">✓</div>
+      <div class="lead-success-title">Pronto!</div>
+      <div class="lead-success-text">Seu plano está a caminho do seu e-mail.</div>
+    </div>
   </div>
 
   <div class="sim-cta">
@@ -337,15 +487,62 @@ const centerTextPlugin = {
 };
 Chart.register(centerTextPlugin);
 
+// Simulador ativo + últimos números calculados de cada um (pra captura de lead)
+let activeSim = 'objetivo';
+const simData = { reserva: {}, juros: {}, objetivo: {}, aposentadoria: {} };
+
+// Frases naturais pra personalizar resultado e e-mail ("Seu plano pra <frase>")
+const OBJETIVO_FRASE = {
+  carro: 'a troca de carro',
+  viajar: 'a viagem',
+  intercambio: 'o intercâmbio',
+  casa: 'a compra/troca de casa',
+  dinheiro: 'juntar um dinheiro',
+  empreender: 'empreender'
+};
+
 function selectSim(sim) {
+  activeSim = sim;
   document.querySelectorAll('.sel-btn').forEach(b => b.classList.toggle('active', b.dataset.sim === sim));
   document.querySelectorAll('.sim-panel').forEach(p => p.style.display = 'none');
   document.getElementById('panel-' + sim).style.display = 'block';
   // Recalcula pra o gráfico renderizar com tamanho correto ao aparecer
   if (sim === 'reserva') calcReserva();
   if (sim === 'juros') calcJuros();
-  if (sim === 'objetivo') calcObjetivo();
-  if (sim === 'aposentadoria') calcAposentadoria();
+  if (sim === 'objetivo') calcObjetivoAtivo();
+}
+
+// Chama a conta certa dentro de "Conquista de objetivos" conforme a lista suspensa
+function calcObjetivoAtivo() {
+  if (document.getElementById('o-tipo').value === 'independencia') calcAposentadoria();
+  else calcObjetivo();
+}
+
+// Lista suspensa "Qual seu objetivo?": mostra/esconde campos e faz o painel morfar
+function onObjetivoTipoChange() {
+  const tipo = document.getElementById('o-tipo').value;
+  const isIndep = tipo === 'independencia';
+  const isOutro = tipo === 'outro';
+  // Visibilidade robusta via display (não só [hidden])
+  document.getElementById('o-fields-padrao').style.display = isIndep ? 'none' : 'block';
+  document.getElementById('o-fields-indep').style.display = isIndep ? 'block' : 'none';
+  document.getElementById('o-nome-field').style.display = isOutro ? 'block' : 'none';
+  document.getElementById('o-intro').textContent = isIndep
+    ? 'O ponto em que seus investimentos geram renda suficiente pra você não depender mais do trabalho.'
+    : 'Escolha seu objetivo, coloque valor e prazo, e veja quanto isso pede por mês.';
+  // Recalcula (display já ajustado, então o gráfico dimensiona certo)
+  calcObjetivoAtivo();
+}
+
+// Revela/oculta o simulador secundário (Juros)
+function toggleMore() {
+  const extras = document.querySelectorAll('.sel-btn.sel-extra');
+  const btn = document.getElementById('moreBtn');
+  const isHidden = !extras[0] || extras[0].style.display === 'none';
+  extras.forEach(e => e.style.display = isHidden ? 'flex' : 'none');
+  btn.textContent = isHidden ? '− Menos simuladores' : '+ Mais simuladores';
+  // Se recolher enquanto o Juros está aberto, volta pra Conquista de objetivos (sem painel órfão)
+  if (!isHidden && activeSim === 'juros') selectSim('objetivo');
 }
 
 // ===== RESERVA: barra de progresso (donut) =====
@@ -365,6 +562,11 @@ function calcReserva() {
     html = '<div class="sim-result-label">Hoje você está coberto por</div><div class="sim-result-value">' + mesesCobertos.toFixed(1).replace('.', ',') + ' meses</div><div class="sim-result-detail">Pra chegar em <strong>' + meses + ' meses</strong> (' + fmt(meta) + '), faltam <strong>' + fmt(falta) + '</strong>.</div>';
   }
   document.getElementById('r-result').innerHTML = html;
+
+  simData.reserva = {
+    dados: { gasto, guardado, meses },
+    resultado: { meta, mesesCobertos: Math.round(mesesCobertos * 10) / 10, falta, completa: (guardado >= meta && meta > 0) }
+  };
 
   const data = [temNaMeta, falta];
   const pct = meta > 0 ? Math.min(100, Math.round((guardado / meta) * 100)) : 0;
@@ -410,6 +612,11 @@ function calcJuros() {
 
   document.getElementById('j-result').innerHTML = '<div class="sim-result-label">Em ' + anos + ' anos você teria</div><div class="sim-result-value">' + fmt(montanteFinal) + '</div><div class="sim-result-detail">Você colocou <strong>' + fmt(investidoFinal) + '</strong>. Os juros trabalharam <strong>' + fmt(jurosFinal) + '</strong> pra você.</div>';
 
+  simData.juros = {
+    dados: { inicial, aporte, anos, taxaAA },
+    resultado: { valorFinal: montanteFinal, aportado: investidoFinal, juros: jurosFinal }
+  };
+
   if (charts.juros) {
     charts.juros.data.labels = labels;
     charts.juros.data.datasets[0].data = aportadoArr;
@@ -429,6 +636,16 @@ function calcJuros() {
   }
 }
 
+// Frase natural do objetivo escolhido (pra personalizar resultado e e-mail)
+function objetivoFraseAtual() {
+  const tipo = document.getElementById('o-tipo').value;
+  if (tipo === 'outro') {
+    const n = document.getElementById('o-nome').value.trim();
+    return n ? ('o objetivo "' + n + '"') : 'o seu objetivo';
+  }
+  return OBJETIVO_FRASE[tipo] || 'o seu objetivo';
+}
+
 // ===== OBJETIVO: linha de crescimento até a meta =====
 function calcObjetivo() {
   const valor = +document.getElementById('o-valor').value || 0;
@@ -442,13 +659,19 @@ function calcObjetivo() {
   if (i > 0) aporte = falta * i / (Math.pow(1 + i, meses) - 1);
   else aporte = falta / meses;
 
+  const frase = objetivoFraseAtual();
   let html;
   if (falta <= 0) {
-    html = '<div class="sim-result-label">Boa notícia</div><div class="sim-result-value">Você já chega lá</div><div class="sim-result-detail">Só com o que já tem rendendo, você alcança <strong>' + fmt(valor) + '</strong> no prazo. Não precisa guardar mais.</div>';
+    html = '<div class="sim-result-label">Boa notícia</div><div class="sim-result-value">Você já chega lá</div><div class="sim-result-detail">Pra ' + frase + ', só com o que já tem rendendo você alcança <strong>' + fmt(valor) + '</strong> no prazo. Não precisa guardar mais.</div>';
   } else {
-    html = '<div class="sim-result-label">Você precisa guardar por mês</div><div class="sim-result-value">' + fmtMes(aporte) + '</div><div class="sim-result-detail">Pra chegar em <strong>' + fmt(valor) + '</strong> em <strong>' + meses + ' meses</strong>, contando o rendimento no caminho.</div>';
+    html = '<div class="sim-result-label">Pra ' + frase + ', guarde por mês</div><div class="sim-result-value">' + fmtMes(aporte) + '</div><div class="sim-result-detail">Pra chegar em <strong>' + fmt(valor) + '</strong> em <strong>' + meses + ' meses</strong>, contando o rendimento no caminho.</div>';
   }
   document.getElementById('o-result').innerHTML = html;
+
+  simData.objetivo = {
+    dados: { valor, tem, meses, taxaAA },
+    resultado: { aporteMensal: (falta > 0 ? aporte : 0), falta, atingido: (falta <= 0) }
+  };
 
   // curva de acúmulo
   const step = Math.max(1, Math.round(meses / 12));
@@ -500,6 +723,11 @@ function calcAposentadoria() {
   }
   document.getElementById('a-result').innerHTML = html;
 
+  simData.aposentadoria = {
+    dados: { renda, tem, anos, taxaAA },
+    resultado: { patrimonioAlvo: alvo, aporteMensal: (falta > 0 ? aporte : 0), falta, atingido: (falta <= 0) }
+  };
+
   const labels = [], acumulado = [], alvoLine = [];
   let saldo = tem;
   for (let ano = 0; ano <= anos; ano++) {
@@ -527,7 +755,82 @@ function calcAposentadoria() {
   }
 }
 
-calcReserva();
+// ===== CAPTURA DE LEAD (mini plano por e-mail do simulador ativo) =====
+function submitLead() {
+  const nome = document.getElementById('leadNome').value.trim();
+  const email = document.getElementById('leadEmail').value.trim();
+  const whatsapp = document.getElementById('leadWhats').value.trim();
+  const consent = document.getElementById('leadConsent').checked;
+  const website = document.getElementById('leadWebsite').value; // honeypot
+  const btn = document.getElementById('leadSubmit');
+  const msg = document.getElementById('leadMsg');
+
+  function showMsg(text, ok) {
+    msg.textContent = text;
+    msg.className = 'lead-msg ' + (ok ? 'ok' : 'err');
+    msg.style.display = 'block';
+  }
+
+  // Validação amigável no cliente (a definitiva é no servidor)
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  if (!nome) { showMsg('Por favor, preencha seu nome.', false); return; }
+  if (!emailOk) { showMsg('Confira o e-mail, parece inválido.', false); return; }
+  if (!consent) { showMsg('Marque o aceite para eu poder te enviar.', false); return; }
+
+  btn.disabled = true;
+  const originalLabel = btn.textContent;
+  btn.textContent = 'Enviando…';
+  msg.style.display = 'none';
+
+  // Descobre o simulador efetivo e o tipo de objetivo (quando aplicável).
+  // "Conquista de objetivos" pode estar no modo comum (objetivo) ou independência.
+  let simKey = activeSim;
+  let objetivoTipo = '';
+  if (activeSim === 'objetivo') {
+    const tipoSel = document.getElementById('o-tipo').value;
+    if (tipoSel === 'independencia') {
+      simKey = 'independencia';
+    } else {
+      simKey = 'objetivo';
+      objetivoTipo = objetivoFraseAtual();
+    }
+  }
+  const snapshotKey = (simKey === 'independencia') ? 'aposentadoria' : simKey;
+  const snapshot = simData[snapshotKey] || {};
+  const payload = {
+    nome, email, whatsapp, consent, website,
+    source: 'simulador',
+    simulador: simKey,
+    objetivoTipo,
+    dados: snapshot.dados || {},
+    resultado: snapshot.resultado || {}
+  };
+
+  fetch('/api/lead', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).then(async (res) => {
+    let data = {};
+    try { data = await res.json(); } catch (e) {}
+    if (res.ok && data.ok) {
+      document.getElementById('leadForm').style.display = 'none';
+      document.getElementById('leadSuccess').style.display = 'block';
+    } else {
+      const errText = (data && data.error) ? data.error : 'Não consegui enviar agora. Tente de novo em instantes.';
+      showMsg(errText, false);
+      btn.disabled = false;
+      btn.textContent = originalLabel;
+    }
+  }).catch(() => {
+    showMsg('Sem conexão com o servidor. Tente de novo em instantes.', false);
+    btn.disabled = false;
+    btn.textContent = originalLabel;
+  });
+}
+
+// Abre o simulador padrão (Objetivo) e calcula tudo ao carregar
+selectSim('objetivo');
 </script>
 
 </body>
