@@ -1,0 +1,9 @@
+{
+  "name": "rakan-links",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Site de links da Rakan + função serverless de captura de lead do raio-x financeiro.",
+  "dependencies": {
+    "nodemailer": "^6.9.14"
+  }
+}

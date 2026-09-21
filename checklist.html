@@ -226,6 +226,67 @@ body {
   font-size: 13px; font-family: 'Inter', sans-serif; text-decoration: underline;
 }
 
+/* ===== CAPTURA DE LEAD (e-mail do raio-x) ===== */
+.lead-capture {
+  background: var(--cream-card); border-radius: 18px; padding: 24px 22px;
+  margin-top: 26px; box-shadow: 0 12px 34px rgba(0,0,0,0.32);
+}
+.lead-title {
+  font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600;
+  color: var(--ink); line-height: 1.2; margin-bottom: 6px;
+}
+.lead-sub { font-size: 13.5px; color: var(--body); line-height: 1.5; margin-bottom: 20px; }
+.lead-field { margin-bottom: 14px; }
+.lead-field label {
+  display: block; font-size: 12px; font-weight: 600; color: var(--body);
+  text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px;
+}
+.lead-field input[type="text"],
+.lead-field input[type="email"],
+.lead-field input[type="tel"] {
+  width: 100%; font-family: 'Inter', sans-serif; font-size: 15px; color: var(--ink);
+  background: #fff; border: 1px solid var(--border-cream); border-radius: 12px;
+  padding: 13px 15px; transition: border-color 0.2s;
+}
+.lead-field input:focus { outline: none; border-color: var(--caramel); }
+.lead-field input::placeholder { color: var(--neutral); }
+.lead-consent {
+  display: flex; align-items: flex-start; gap: 10px;
+  margin: 4px 0 20px; cursor: pointer;
+}
+.lead-consent input[type="checkbox"] {
+  flex-shrink: 0; width: 18px; height: 18px; margin-top: 1px;
+  accent-color: var(--terracotta); cursor: pointer;
+}
+.lead-consent span { font-size: 12.5px; color: var(--body); line-height: 1.45; }
+/* honeypot anti-spam: escondido de humanos */
+.lead-hp {
+  position: absolute; left: -9999px; width: 1px; height: 1px;
+  overflow: hidden; opacity: 0;
+}
+.lead-submit {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600;
+  padding: 15px 24px; border-radius: 100px; border: none; cursor: pointer;
+  background: var(--caramel); color: var(--ink);
+  transition: transform 0.1s, opacity 0.2s;
+}
+.lead-submit:active { transform: scale(0.98); }
+.lead-submit:disabled { opacity: 0.6; cursor: default; }
+.lead-msg { font-size: 13px; line-height: 1.5; margin-top: 14px; text-align: center; }
+.lead-msg.ok { color: var(--green); }
+.lead-msg.err { color: var(--terracotta); }
+.lead-success {
+  text-align: center; padding: 8px 0;
+}
+.lead-success .lead-success-icon {
+  width: 52px; height: 52px; border-radius: 50%; margin: 0 auto 14px;
+  background: var(--green); display: flex; align-items: center; justify-content: center;
+  color: var(--cream); font-size: 26px; font-weight: 700;
+}
+.lead-success-title { font-family: 'Fraunces', serif; font-size: 19px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+.lead-success-text { font-size: 13.5px; color: var(--body); line-height: 1.5; }
+
 .foot { text-align: center; margin-top: 32px; }
 .foot-brand { font-family: 'Fraunces', serif; font-size: 14px; color: var(--cream); margin-bottom: 4px; }
 .foot-tag { font-size: 11px; color: var(--neutral); font-style: italic; }
@@ -319,6 +380,47 @@ body {
       </a>
     </div>
 
+    <!-- ===== CAPTURA DE LEAD (opcional, resultado já apareceu acima) ===== -->
+    <div class="lead-capture" id="leadCapture">
+      <div id="leadForm">
+        <div class="lead-title">Quer receber seu raio-x no e-mail?</div>
+        <div class="lead-sub">Mando seu resultado completo e os próximos passos.</div>
+
+        <div class="lead-field">
+          <label for="leadNome">Nome</label>
+          <input type="text" id="leadNome" name="nome" autocomplete="name" placeholder="Seu nome">
+        </div>
+        <div class="lead-field">
+          <label for="leadEmail">E-mail</label>
+          <input type="email" id="leadEmail" name="email" autocomplete="email" placeholder="voce@email.com">
+        </div>
+        <div class="lead-field">
+          <label for="leadWhats">WhatsApp <span style="text-transform:none;font-weight:400;color:var(--neutral);">(opcional)</span></label>
+          <input type="tel" id="leadWhats" name="whatsapp" autocomplete="tel" placeholder="(11) 99999-9999">
+        </div>
+
+        <!-- honeypot anti-spam: humanos não veem, bots preenchem -->
+        <div class="lead-hp" aria-hidden="true">
+          <label for="leadWebsite">Não preencha este campo</label>
+          <input type="text" id="leadWebsite" name="website" tabindex="-1" autocomplete="off">
+        </div>
+
+        <label class="lead-consent">
+          <input type="checkbox" id="leadConsent">
+          <span>Aceito receber contato do Arthur sobre meu resultado.</span>
+        </label>
+
+        <button class="lead-submit" id="leadSubmit" onclick="submitLead()">Receber meu raio-x</button>
+        <div class="lead-msg" id="leadMsg" style="display:none;"></div>
+      </div>
+
+      <div class="lead-success" id="leadSuccess" style="display:none;">
+        <div class="lead-success-icon">✓</div>
+        <div class="lead-success-title">Pronto!</div>
+        <div class="lead-success-text">Seu raio-x está a caminho do seu e-mail.</div>
+      </div>
+    </div>
+
     <div class="result-restart">
       <button onclick="restart()">Refazer o checklist</button>
     </div>
@@ -364,6 +466,8 @@ const QUESTIONS = [
 
 let current = 0;
 let answers = new Array(QUESTIONS.length).fill(null);
+// Guarda o resultado calculado para o envio por e-mail (preenchido no fim de showResult)
+let resultData = null;
 
 function startQuiz() {
   document.getElementById('intro').style.display = 'none';
@@ -483,14 +587,95 @@ function showResult() {
   }
   document.getElementById('waLink').href = "https://wa.me/5511981940543?text=" + encodeURIComponent(waMessage);
 
+  // === Guarda os dados do resultado para o envio por e-mail (não altera o cálculo acima) ===
+  const etapaNome = allDominated ? "Você está no topo" : STAGES[stageIndex].name;
+  resultData = {
+    etapa: etapaNome,
+    respostas: QUESTIONS.map((q, i) => ({
+      pergunta: q.q,
+      resposta: answers[i] === true ? 'Sim' : 'Não'
+    })),
+    ondeAgir: noItems.map(i => ({ pergunta: QUESTIONS[i].q, acao: QUESTIONS[i].action })),
+    jaFunciona: yesItems.map(i => QUESTIONS[i].yes)
+  };
+
   window.scrollTo(0, 0);
+}
+
+function submitLead() {
+  const nome = document.getElementById('leadNome').value.trim();
+  const email = document.getElementById('leadEmail').value.trim();
+  const whatsapp = document.getElementById('leadWhats').value.trim();
+  const consent = document.getElementById('leadConsent').checked;
+  const website = document.getElementById('leadWebsite').value; // honeypot
+  const btn = document.getElementById('leadSubmit');
+  const msg = document.getElementById('leadMsg');
+
+  function showMsg(text, ok) {
+    msg.textContent = text;
+    msg.className = 'lead-msg ' + (ok ? 'ok' : 'err');
+    msg.style.display = 'block';
+  }
+
+  // Validação amigável no cliente (a definitiva é no servidor)
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  if (!nome) { showMsg('Por favor, preencha seu nome.', false); return; }
+  if (!emailOk) { showMsg('Confira o e-mail, parece inválido.', false); return; }
+  if (!consent) { showMsg('Marque o aceite para eu poder te enviar.', false); return; }
+
+  btn.disabled = true;
+  const originalLabel = btn.textContent;
+  btn.textContent = 'Enviando…';
+  msg.style.display = 'none';
+
+  const payload = {
+    nome, email, whatsapp, consent, website,
+    etapa: resultData ? resultData.etapa : '',
+    respostas: resultData ? resultData.respostas : [],
+    ondeAgir: resultData ? resultData.ondeAgir : [],
+    jaFunciona: resultData ? resultData.jaFunciona : []
+  };
+
+  fetch('/api/lead', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).then(async (res) => {
+    let data = {};
+    try { data = await res.json(); } catch (e) {}
+    if (res.ok && data.ok) {
+      document.getElementById('leadForm').style.display = 'none';
+      document.getElementById('leadSuccess').style.display = 'block';
+    } else {
+      const errText = (data && data.error) ? data.error : 'Não consegui enviar agora. Tente de novo em instantes.';
+      showMsg(errText, false);
+      btn.disabled = false;
+      btn.textContent = originalLabel;
+    }
+  }).catch(() => {
+    showMsg('Sem conexão com o servidor. Tente de novo em instantes.', false);
+    btn.disabled = false;
+    btn.textContent = originalLabel;
+  });
 }
 
 function restart() {
   answers = new Array(QUESTIONS.length).fill(null);
   current = 0;
+  resultData = null;
   document.getElementById('result').classList.remove('active');
   document.getElementById('intro').style.display = 'block';
+  // Reseta o formulário de captura para um novo preenchimento
+  document.getElementById('leadForm').style.display = 'block';
+  document.getElementById('leadSuccess').style.display = 'none';
+  document.getElementById('leadNome').value = '';
+  document.getElementById('leadEmail').value = '';
+  document.getElementById('leadWhats').value = '';
+  document.getElementById('leadWebsite').value = '';
+  document.getElementById('leadConsent').checked = false;
+  const btn = document.getElementById('leadSubmit');
+  btn.disabled = false; btn.textContent = 'Receber meu raio-x';
+  document.getElementById('leadMsg').style.display = 'none';
   window.scrollTo(0, 0);
 }
 </script>
